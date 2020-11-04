@@ -1,0 +1,25 @@
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.margin-bottom-inherit {
+  margin-bottom: inherit;
+}
+
+.product-description {
+  height: 250px;
+}
+
+.no-wrap {
+  flex-wrap: nowrap;
+}
+
+.overflow-wrap-normal {
+  overflow-wrap: normal
+}
+
+.h-85px {
+  max-height: 85px;
+}
