@@ -1,5 +1,5 @@
 export default async function login(email, password) {
-    const response = await fetch('http://api.markette-insights.com/users/login', {
+    const response = await fetch('https://api.markette-insights.com/users/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
