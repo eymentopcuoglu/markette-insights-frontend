@@ -1,5 +1,5 @@
 async function initialFetch(clientId, userId) {
-    const response = await fetch('https://api.markette-insights.com/application/initial/' + clientId + '/' + userId, {
+    const response = await fetch('http://localhost:8000/application/initial/' + clientId + '/' + userId, {
         method: 'GET',
         credentials: 'include'
     });

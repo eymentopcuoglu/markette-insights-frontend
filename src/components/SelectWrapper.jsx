@@ -6,7 +6,7 @@ export default function SelectWrapper(props) {
     const customStyles = {
         valueContainer: (provided, state) => ({
             ...provided,
-            maxHeight: '85px'
+            maxHeight: '38px'
         }),
     };
 
