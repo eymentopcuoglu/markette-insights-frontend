@@ -2,19 +2,47 @@ import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { getAveragePrice } from "../../utils/pricingUtil";
 
 export default function CurrentPricingChart(props) {
-
 
     const { markets } = useSelector(state => state.data);
 
     useEffect(() => {
-        setData(
-            props.selectedProduct ? props.selectedProduct.current_product_transactions.map(item => ({
-                name: markets[parseInt(item.market) - 1].name,
-                data: [parseInt(item.pricen) / 100]
-            })) : []
-        );
+        if (props.selectedProduct) {
+            setData(
+                props.selectedProduct.current_product_transactions.map(item => ({
+                    name: markets[parseInt(item.market) - 1].name,
+                    data: [parseInt(item.pricen) / 100]
+                }))
+            );
+            const average = getAveragePrice(props.selectedProduct);
+            setState({
+                ...state,
+                options: {
+                    ...state.options,
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: average,
+                                strokeDashArray: 10,
+                                borderColor: '#FF0000',
+                                label: {
+                                    borderWidth: 3,
+                                    borderColor: '#FF0000',
+                                    offsetY: 7,
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0000'
+                                    },
+                                    text: 'Average Price'
+                                }
+                            }
+                        ]
+                    }
+                }
+            })
+        }
     }, [props.selectedProduct]);
 
     const [data, setData] = useState([]);
@@ -32,7 +60,6 @@ export default function CurrentPricingChart(props) {
                     dataLabels: {
                         show: false
                     },
-
                 },
             },
             legend: {
@@ -44,7 +71,7 @@ export default function CurrentPricingChart(props) {
             grid: {
                 borderColor: '#f8f8fa',
                 row: {
-                    colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                    colors: ['transparent', 'transparent'],
                     opacity: 0.5
                 },
             },
