@@ -25,13 +25,25 @@ export default function ProductRow(props) {
             <Col xl="3">
                 <Row>
                     <Col>
-                        <CardWithText text={ props.minimumPrice } />
+                        <Card className="text-white h-75 w-100 calculated-fields-background">
+                            <CardBody className='center'>
+                                <p className='font-size-16 font-weight-bold text-center text-black-50 margin-bottom-inherit'>{ props.minimumPrice }</p>
+                            </CardBody>
+                        </Card>
                     </Col>
                     <Col>
-                        <CardWithText text={ props.averagePrice } />
+                        <Card className="text-white h-75 w-100 calculated-fields-background">
+                            <CardBody className='center'>
+                                <p className='font-size-16 font-weight-bold text-center text-black-50 margin-bottom-inherit'>{ props.averagePrice }</p>
+                            </CardBody>
+                        </Card>
                     </Col>
                     <Col>
-                        <CardWithText text={ props.standardDeviation } />
+                        <Card className="text-white h-75 w-100 calculated-fields-background">
+                            <CardBody className='center'>
+                                <p className='font-size-16 font-weight-bold text-center text-black-50 margin-bottom-inherit'>{ props.standardDeviation }</p>
+                            </CardBody>
+                        </Card>
                     </Col>
                 </Row>
             </Col>

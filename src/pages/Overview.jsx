@@ -145,9 +145,8 @@ export default function Overview(props) {
                 </Col>
             </Row>
 
-
             <PerfectScrollbar>
-                <Row className='mt-5'>
+                <Row className='mt-5 mb-3 table-column-titles'>
                     <Col xl="3" className='center w-100'>
                         <Card className="text-white bg-primary w-100">
                             <CardBody>
@@ -159,7 +158,7 @@ export default function Overview(props) {
                     <Col xl="3">
                         <Row>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
+                                <Card className="text-white calculated-fields-title-background">
                                     <CardBody>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Minimum
                                             Price</p>
@@ -167,7 +166,7 @@ export default function Overview(props) {
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
+                                <Card className="text-white calculated-fields-title-background">
                                     <CardBody>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Average
                                             Price</p>
@@ -175,14 +174,13 @@ export default function Overview(props) {
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
+                                <Card className="text-white calculated-fields-title-background">
                                     <CardBody>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Standard
                                             Deviation</p>
                                     </CardBody>
                                 </Card>
                             </Col>
-
                         </Row>
                     </Col>
 
@@ -201,7 +199,6 @@ export default function Overview(props) {
                         </Row>
                     </Col>
                 </Row>
-
                 { clientProducts
                     //Search filter
                     .filter(product => product.product_info.name.toLowerCase().indexOf(search) !== -1)
