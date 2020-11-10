@@ -153,7 +153,7 @@ export default function ProductComparison(props) {
                 </Col>
             </Row>
 
-            <Row className='center mt-4'>
+            <Row className='center mt-4 product-comparison-sticky'>
                 <Col xl='5'>
                     <ProductDescription image={ selectedProduct1 ? selectedProduct1.product_info.imageurl : '' }
                                         name={ selectedProduct1 ? selectedProduct1.product_info.name : '' }
@@ -177,91 +177,83 @@ export default function ProductComparison(props) {
                 </Col>
             </Row>
 
-            <PerfectScrollbar>
-                <div style={ vh50 }>
-                    <Row className='center my-5 h-100'>
-                        <Col xl='3'>
-                            <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
-                                          value={ selectedProduct1 ? selectedProduct1.minimumMarket + ' - ' +
-                                              selectedProduct1.minimumPrice : 'Please select a product' } />
-                        </Col>
-                        <Col xl='2' className="text-center">
-                            <ProductActivity title='Availability'
-                                             value={ selectedProduct1 ? [selectedProduct1.availability] : [0] } />
-                        </Col>
-                        <Col xl='1' />
-                        <Col xl='3'>
-                            <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
-                                          value={ selectedProduct2 ? selectedProduct2.minimumMarket + ' - ' +
-                                              selectedProduct2.minimumPrice : 'Please select a product' } />
-                        </Col>
-                        <Col xl='2' className="text-center">
-                            <ProductActivity title='Availability'
-                                             value={ selectedProduct2 ? [selectedProduct2.availability] : [0] } />
-                        </Col>
-                    </Row>
+            <Row className='center my-5 h-100'>
+                <Col xl='3'>
+                    <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
+                                  value={ selectedProduct1 ? selectedProduct1.minimumMarket + ' - ' +
+                                      selectedProduct1.minimumPrice : 'Please select a product' } />
+                </Col>
+                <Col xl='2' className="text-center">
+                    <ProductActivity title='Availability'
+                                     value={ selectedProduct1 ? [selectedProduct1.availability] : [0] } />
+                </Col>
+                <Col xl='1' />
+                <Col xl='3'>
+                    <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
+                                  value={ selectedProduct2 ? selectedProduct2.minimumMarket + ' - ' +
+                                      selectedProduct2.minimumPrice : 'Please select a product' } />
+                </Col>
+                <Col xl='2' className="text-center">
+                    <ProductActivity title='Availability'
+                                     value={ selectedProduct2 ? [selectedProduct2.availability] : [0] } />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
-                                                      selectedProduct2={ selectedProduct2 } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
+                                              selectedProduct2={ selectedProduct2 } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <DateRangeComparison selectedProduct1={ selectedProduct1 }
-                                                 selectedProduct2={ selectedProduct2 }
-                                                 startDate={ startDate }
-                                                 endDate={ endDate } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <DateRangeComparison selectedProduct1={ selectedProduct1 }
+                                         selectedProduct2={ selectedProduct2 }
+                                         startDate={ startDate }
+                                         endDate={ endDate } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <YTDPricingComparison selectedProduct1={ selectedProduct1 }
-                                                  selectedProduct2={ selectedProduct2 } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <YTDPricingComparison selectedProduct1={ selectedProduct1 }
+                                          selectedProduct2={ selectedProduct2 } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
-                                                       selectedProduct2={ selectedProduct2 }
-                                                       startDate={ startDate }
-                                                       endDate={ endDate } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
+                                               selectedProduct2={ selectedProduct2 }
+                                               startDate={ startDate }
+                                               endDate={ endDate } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg="5" className='center'>
-                            <Row className='center'>
-                                <Col className='m-5'>
-                                    <ProductActivity title='Activity Frequency' value={ [25] } />
-                                </Col>
-                                <Col className='m-5'>
-                                    <ProductActivity title='Activity Frequency' value={ [25] } />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
-                </div>
-            </PerfectScrollbar>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg='2'>
+                    <ProductActivity title='Activity Frequency' value={ [25] } />
+                </Col>
+                <Col lg='5'>
+                    <ChartDescription />
+                </Col>
+                <Col lg='2'>
+                    <ProductActivity title='Activity Frequency' value={ [25] } />
+                </Col>
+            </Row>
         </>
     )
 }
