@@ -103,7 +103,7 @@ export default function Overview(props) {
             </Row>
 
 
-            <Row className='d-flex align-items-center'>
+            <Row className='d-flex align-items-center mt-2'>
                 <Col xl='3'>
                     <SearchBar value={ search } handleChange={ handleSearchBar } />
                 </Col>
@@ -145,11 +145,13 @@ export default function Overview(props) {
                 </Col>
             </Row>
 
-            <PerfectScrollbar>
+            <PerfectScrollbar className='overflow-inherit'>
+
                 <Row className='mt-5 mb-3 table-column-titles'>
-                    <Col xl="3" className='center w-100'>
-                        <Card className="text-white bg-primary w-100">
-                            <CardBody>
+
+                    <Col xl="3" className='w-100'>
+                        <Card className="text-white bg-primary w-100 h-75">
+                            <CardBody className='center'>
                                 <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Products</p>
                             </CardBody>
                         </Card>
@@ -158,24 +160,24 @@ export default function Overview(props) {
                     <Col xl="3">
                         <Row>
                             <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Minimum
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Average
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Standard
                                             Deviation</p>
                                     </CardBody>
@@ -185,11 +187,11 @@ export default function Overview(props) {
                     </Col>
 
                     <Col xl="6">
-                        <Row className='retailers'>
+                        <Row className='retailers h-100'>
                             { selectedRetailers ? selectedRetailers.map((retailer, key) => (
                                 <Col key={ key } xl="3">
-                                    <Card className="text-white bg-primary w-100">
-                                        <CardBody>
+                                    <Card className="text-white bg-primary w-100 h-75">
+                                        <CardBody className='center'>
                                             <p className='font-size-17 text-center m-auto overflow-wrap-normal'>{ retailer.label }</p>
                                         </CardBody>
                                     </Card>

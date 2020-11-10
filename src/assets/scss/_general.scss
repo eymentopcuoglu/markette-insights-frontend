@@ -16,6 +16,10 @@
   flex-wrap: nowrap;
 }
 
+.overflow-inherit {
+  overflow: inherit !important;
+}
+
 .overflow-wrap-normal {
   overflow-wrap: normal
 }
