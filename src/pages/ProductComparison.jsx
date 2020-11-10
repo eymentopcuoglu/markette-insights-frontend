@@ -60,16 +60,25 @@ export default function ProductComparison(props) {
     useEffect(() => {
         if (selectedSKU1) {
             const product = clientProducts.find(item => item.product_id === selectedSKU1.value);
-            const minimumPricing = getMinimumPrice(product);
-            const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-            const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
-            const availability = getAvailability(product, markets);
-            setSelectedProduct1({
-                ...selectedProduct1, ...product,
-                minimumMarket,
-                minimumPrice,
-                availability
-            });
+            if (product.current_product_transactions.length === 0) {
+                setSelectedProduct1({
+                    ...selectedProduct1, ...product,
+                    minimumMarket: '',
+                    minimumPrice: '',
+                    availability: 0
+                });
+            } else {
+                const minimumPricing = getMinimumPrice(product);
+                const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
+                const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
+                const availability = getAvailability(product, markets);
+                setSelectedProduct1({
+                    ...selectedProduct1, ...product,
+                    minimumMarket,
+                    minimumPrice,
+                    availability
+                });
+            }
         }
     }, [selectedSKU1]);
 
@@ -77,16 +86,25 @@ export default function ProductComparison(props) {
     useEffect(() => {
         if (selectedSKU2) {
             const product = clientProducts.find(item => item.product_id === selectedSKU2.value);
-            const minimumPricing = getMinimumPrice(product);
-            const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-            const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
-            const availability = getAvailability(product, markets);
-            setSelectedProduct2({
-                ...selectedProduct2, ...product,
-                minimumMarket,
-                minimumPrice,
-                availability
-            });
+            if (product.current_product_transactions.length === 0) {
+                setSelectedProduct2({
+                    ...selectedProduct2, ...product,
+                    minimumMarket: '',
+                    minimumPrice: '',
+                    availability: 0
+                });
+            } else {
+                const minimumPricing = getMinimumPrice(product);
+                const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
+                const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
+                const availability = getAvailability(product, markets);
+                setSelectedProduct2({
+                    ...selectedProduct2, ...product,
+                    minimumMarket,
+                    minimumPrice,
+                    availability
+                });
+            }
         }
     }, [selectedSKU2]);
 
@@ -111,7 +129,7 @@ export default function ProductComparison(props) {
     const vh50 = {
         height: '50vh'
     };
-    
+
     return (
         <>
             <Row className='center'>

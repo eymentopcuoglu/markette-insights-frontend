@@ -11,25 +11,19 @@ export default function CurrentPricingChart(props) {
 
     useEffect(() => {
         setData(
-            (props.selectedProduct1 && props.selectedProduct2) ? props.selectedProduct1.current_product_transactions.map(product1 => {
+            (props.selectedProduct1 && props.selectedProduct2) ? props.selectedProduct1.current_product_transactions.reduce((result, product1) => {
 
                 //Find second product's price in that market
                 const product2Price = props.selectedProduct2.current_product_transactions.find(product2 => product2.market === product1.market);
-
-                //If product2Price found
                 if (product2Price) {
                     const parity = (product1.pricen / (product2Price.pricen)) * 100;
-                    return ({
+                    result.push({
                         name: getMarket(product1.market, markets),
                         data: [parity]
                     });
-                } else {
-                    return ({
-                        name: getMarket(product1.market, markets),
-                        data: []
-                    });
                 }
-            }) : []
+                return result;
+            }, []) : []
         );
     }, [props.selectedProduct1, props.selectedProduct2]);
 
