@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { getMarket } from "../../utils/namingUtil";
+import { getMarketName } from "../../utils/namingUtil";
 
 export default function CurrentPricingChart(props) {
 
@@ -18,7 +18,7 @@ export default function CurrentPricingChart(props) {
                 if (product2Price) {
                     const parity = (product1.pricen / (product2Price.pricen)) * 100;
                     result.push({
-                        name: getMarket(product1.market, markets),
+                        name: getMarketName(product1.market, markets),
                         data: [parity]
                     });
                 }

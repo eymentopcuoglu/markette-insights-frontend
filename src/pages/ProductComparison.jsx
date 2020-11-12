@@ -16,7 +16,7 @@ import CurrentPricingComparison from "../components/Product_Comparison/CurrentPr
 import DateRangeComparison from "../components/Product_Comparison/DateRangeComparison";
 
 import { getAvailability, getMinimumPrice } from "../utils/pricingUtil";
-import { getMarket } from "../utils/namingUtil";
+import { getMarketName } from "../utils/namingUtil";
 import YTDPricingComparison from "../components/Product_Comparison/YTDPricingComparison";
 import DateRangeParityComparison from "../components/Product_Comparison/DateRangeParityComparison";
 import moment from "moment";
@@ -70,7 +70,7 @@ export default function ProductComparison(props) {
             } else {
                 const minimumPricing = getMinimumPrice(product);
                 const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-                const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
+                const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
                 const availability = getAvailability(product, markets);
                 setSelectedProduct1({
                     ...selectedProduct1, ...product,
@@ -96,7 +96,7 @@ export default function ProductComparison(props) {
             } else {
                 const minimumPricing = getMinimumPrice(product);
                 const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-                const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
+                const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
                 const availability = getAvailability(product, markets);
                 setSelectedProduct2({
                     ...selectedProduct2, ...product,
