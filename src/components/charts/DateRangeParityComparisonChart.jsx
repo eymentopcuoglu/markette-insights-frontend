@@ -4,7 +4,7 @@ import ReactApexChart from 'react-apexcharts';
 
 import { getDatesBetweenDates } from "../../utils/dateUtil";
 import api from "../../api";
-import { reduceAndGetAverage } from "../../utils/pricingUtil";
+import { fillDates, reduceAndGetAverage } from "../../utils/pricingUtil";
 
 export default function DateRangeParityComparisonChart(props) {
 
@@ -105,8 +105,29 @@ export default function DateRangeParityComparisonChart(props) {
                     productData2 = productData2.filter(product2 => productData1.find(product1 =>
                         (product1.market === product2.market) && (product1.created_at === product2.created_at)));
 
-                    let reducedProduct1 = reduceAndGetAverage(productData1);
-                    const reducedProduct2 = reduceAndGetAverage(productData2);
+                    //Retailer based filtering
+                    let filteredProductData1 = [...productData1];
+                    if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                        filteredProductData1 = filteredProductData1
+                            .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
+                    }
+
+                    //Retailer based filtering
+                    let filteredProductData2 = [...productData2];
+                    if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                        filteredProductData2 = filteredProductData2
+                            .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
+                    }
+
+                    let reducedProduct1 = reduceAndGetAverage(filteredProductData1);
+                    const reducedProduct2 = reduceAndGetAverage(filteredProductData2);
+
+                    if (filteredProductData1 && filteredProductData1.length !== 0) {
+                        reducedProduct1 = fillDates(reduceAndGetAverage(filteredProductData1), props.startDate, props.endDate)
+                    }
+                    if (filteredProductData2 && filteredProductData2.length !== 0) {
+                        reducedProduct1 = fillDates(reduceAndGetAverage(filteredProductData1), props.startDate, props.endDate)
+                    }
 
                     //Find second product's price in that date
                     reducedProduct1 = reducedProduct1.map(product1 => {
@@ -147,12 +168,12 @@ export default function DateRangeParityComparisonChart(props) {
             }
         }
         ,
-        [props.selectedProduct1, props.selectedProduct2, props.endDate]
+        [props.selectedProduct1, props.selectedProduct2, props.endDate, props.selectedRetailers]
     );
 
     return (
         <React.Fragment>
-            <ReactApexChart options={ state.options } series={ state.series } type="area" height="290" />
+            <ReactApexChart options={ state.options } series={ state.series } type="area" height="350" />
         </React.Fragment>
     );
 }

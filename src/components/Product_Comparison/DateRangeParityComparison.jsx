@@ -10,6 +10,7 @@ export default function ProductDataRange(props) {
                 <h4 className="card-title mb-4">Parity Comparison with Date Range</h4>
                 <DateRangeParityComparisonChart selectedProduct1={ props.selectedProduct1 }
                                                 selectedProduct2={ props.selectedProduct2 }
+                                                selectedRetailers={ props.selectedRetailers }
                                                 startDate={ props.startDate }
                                                 endDate={ props.endDate } />
             </CardBody>

@@ -1,5 +1,9 @@
 export function getMarketName(marketId, markets) {
-    return markets.find(market => market.id === marketId).name;
+    const marketName = markets.find(market => market.id === parseInt(marketId));
+    if (marketName)
+        return marketName.name;
+    else
+        return 'Could not find the market!';
 }
 
 export function getCategoryId(subCategories, subCategoryId) {

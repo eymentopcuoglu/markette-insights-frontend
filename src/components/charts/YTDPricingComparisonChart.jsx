@@ -63,8 +63,23 @@ export default function YTDPricingComparisonChart(props) {
                 const productData1 = await api.productAnalysis.productAnalysisFetch(props.selectedProduct1.product_id, start, end);
                 const productData2 = await api.productAnalysis.productAnalysisFetch(props.selectedProduct2.product_id, start, end);
 
-                const reducedProduct1 = groupByMonth(reduceAndGetAverage(productData1));
-                const reducedProduct2 = groupByMonth(reduceAndGetAverage(productData2));
+                //Retailer based filtering
+                let filteredProductData1 = [...productData1];
+                if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                    filteredProductData1 = filteredProductData1
+                        .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
+                }
+
+                //Retailer based filtering
+                let filteredProductData2 = [...productData2];
+                if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                    filteredProductData2 = filteredProductData2
+                        .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
+                }
+
+
+                const reducedProduct1 = groupByMonth(reduceAndGetAverage(filteredProductData1));
+                const reducedProduct2 = groupByMonth(reduceAndGetAverage(filteredProductData2));
 
                 const months = reducedProduct1.map(item => moment(item.created_at).format('MMMM'));
                 const product1 = {
@@ -90,9 +105,9 @@ export default function YTDPricingComparisonChart(props) {
             }
             getData();
         }
-    }, [props.selectedProduct1, props.selectedProduct2]);
+    }, [props.selectedProduct1, props.selectedProduct2,props.selectedRetailers]);
 
     return (
-        <ReactApexChart options={ state.options } series={ state.series } type="bar" height="290" />
+        <ReactApexChart options={ state.options } series={ state.series } type="bar" height="350" />
     );
 }

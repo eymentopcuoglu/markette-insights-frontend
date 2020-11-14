@@ -3,6 +3,7 @@ import ReactApexChart from 'react-apexcharts';
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { getAveragePrice } from "../../utils/pricingUtil";
+import { getMarketName } from "../../utils/namingUtil";
 
 export default function CurrentPricingChart(props) {
 
@@ -10,13 +11,18 @@ export default function CurrentPricingChart(props) {
 
     useEffect(() => {
         if (props.selectedProduct) {
+            let filteredData = { ...props.selectedProduct };
+            if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                filteredData.current_product_transactions = filteredData.current_product_transactions
+                    .filter(item => props.selectedRetailers.some(retailer => retailer.value === item.market));
+            }
             setData(
-                props.selectedProduct.current_product_transactions.map(item => ({
-                    name: markets[parseInt(item.market) - 1].name,
+                filteredData.current_product_transactions.map(item => ({
+                    name: getMarketName(item.market, markets),
                     data: [parseInt(item.pricen) / 100]
                 }))
             );
-            const average = getAveragePrice(props.selectedProduct);
+            const average = getAveragePrice(filteredData);
             setState({
                 ...state,
                 options: {
@@ -43,7 +49,7 @@ export default function CurrentPricingChart(props) {
                 }
             })
         }
-    }, [props.selectedProduct]);
+    }, [props.selectedProduct, props.selectedRetailers]);
 
     const [data, setData] = useState([]);
     const [state, setState] = useState({
@@ -91,5 +97,5 @@ export default function CurrentPricingChart(props) {
             }
         }
     });
-    return <ReactApexChart options={ state.options } series={ data } type="bar" height="290" />
+    return <ReactApexChart options={ state.options } series={ data } type="bar" height="350" />
 }

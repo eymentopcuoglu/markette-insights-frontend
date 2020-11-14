@@ -20,8 +20,7 @@ import { getMarketName } from "../utils/namingUtil";
 import YTDPricingComparison from "../components/Product_Comparison/YTDPricingComparison";
 import DateRangeParityComparison from "../components/Product_Comparison/DateRangeParityComparison";
 import moment from "moment";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
+import DateRangeComparisonChart from "../components/charts/DateRangeComparisonChart";
 
 export default function ProductComparison(props) {
 
@@ -45,6 +44,9 @@ export default function ProductComparison(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
 
+    const [activity1, setActivity1] = useState({ activityFrequency: 0, activityLength: 0 });
+    const [activity2, setActivity2] = useState({ activityFrequency: 0, activityLength: 0 });
+
     //Date Wrapper change handler
     const onDateChange = dates => {
         const [start, end] = dates;
@@ -55,6 +57,17 @@ export default function ProductComparison(props) {
     useEffect(() => {
         dispatch(actions.breadcrumb.setBreadcrumbItems("Product Comparison", state.breadcrumbItems));
     }, []);
+
+
+    useEffect(() => {
+        if (selectedChannels && selectedChannels.length !== 0) {
+            setSelectedRetailers(markets.filter(market => selectedChannels.some(selectedChannel => selectedChannel.value === market.channel_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedChannels]);
 
     //Change selectedProduct based on selectedSKU state
     useEffect(() => {
@@ -126,10 +139,6 @@ export default function ProductComparison(props) {
         }
     }, [clientProducts]);
 
-    const vh50 = {
-        height: '50vh'
-    };
-
     return (
         <>
             <Row className='center'>
@@ -138,7 +147,7 @@ export default function ProductComparison(props) {
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
                 <Col xl='2' className='center'>
-                    <SelectWrapper title='Retailer' data={ selectedChannels ? markets.filter(market => {
+                    <SelectWrapper title='Retailer' data={ (selectedChannels && selectedChannels.length !== 0)  ? markets.filter(market => {
                         for (let i = 0; i < selectedChannels.length; i++) {
                             if (market.channel_id === selectedChannels[i].value)
                                 return true;
@@ -202,7 +211,8 @@ export default function ProductComparison(props) {
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
                 <Col lg={ 5 }>
                     <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
-                                              selectedProduct2={ selectedProduct2 } />
+                                              selectedProduct2={ selectedProduct2 }
+                                              selectedRetailers={ selectedRetailers }/>
                 </Col>
                 <Col lg={ 5 }>
                     <ChartDescription />
@@ -213,6 +223,9 @@ export default function ProductComparison(props) {
                 <Col lg={ 5 }>
                     <DateRangeComparison selectedProduct1={ selectedProduct1 }
                                          selectedProduct2={ selectedProduct2 }
+                                         selectedRetailers={ selectedRetailers }
+                                         setActivity1={ setActivity1 }
+                                         setActivity2={ setActivity2 }
                                          startDate={ startDate }
                                          endDate={ endDate } />
                 </Col>
@@ -224,7 +237,8 @@ export default function ProductComparison(props) {
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
                 <Col lg={ 5 }>
                     <YTDPricingComparison selectedProduct1={ selectedProduct1 }
-                                          selectedProduct2={ selectedProduct2 } />
+                                          selectedProduct2={ selectedProduct2 }
+                                          selectedRetailers={ selectedRetailers }/>
                 </Col>
                 <Col lg={ 5 }>
                     <ChartDescription />
@@ -235,6 +249,7 @@ export default function ProductComparison(props) {
                 <Col lg={ 5 }>
                     <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
                                                selectedProduct2={ selectedProduct2 }
+                                               selectedRetailers={ selectedRetailers }
                                                startDate={ startDate }
                                                endDate={ endDate } />
                 </Col>
@@ -245,13 +260,13 @@ export default function ProductComparison(props) {
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
                 <Col lg='2'>
-                    <ProductActivity title='Activity Frequency' value={ [25] } />
+                    <ProductActivity title='Activity Frequency' value={ [activity1.activityFrequency] } />
                 </Col>
                 <Col lg='5'>
                     <ChartDescription />
                 </Col>
                 <Col lg='2'>
-                    <ProductActivity title='Activity Frequency' value={ [25] } />
+                    <ProductActivity title='Activity Frequency' value={ [activity2.activityFrequency] } />
                 </Col>
             </Row>
         </>

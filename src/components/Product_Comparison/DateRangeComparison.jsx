@@ -10,6 +10,9 @@ export default function ProductDataRange(props) {
                 <h4 className="card-title mb-4">Average Pricing Comparison with Date Range</h4>
                 <DateRangeComparisonChart selectedProduct1={ props.selectedProduct1 }
                                           selectedProduct2={ props.selectedProduct2 }
+                                          selectedRetailers={ props.selectedRetailers }
+                                          setActivity1={ props.setActivity1 }
+                                          setActivity2={ props.setActivity2 }
                                           startDate={ props.startDate }
                                           endDate={ props.endDate } />
             </CardBody>

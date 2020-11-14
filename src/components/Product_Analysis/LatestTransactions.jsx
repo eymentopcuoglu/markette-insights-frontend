@@ -34,8 +34,9 @@ export default function LatestTransactions(props) {
                                 const market = markets[parseInt(log.market) - 1].name;
                                 const date = moment(log.created_at).format('DD.MM.YYYY');
                                 return (
-                                    <Alert className='w-100' color={ (firstPrice > lastPrice ? 'danger' : 'success') }>
-                                        <Row key={ key } className='my-2'>
+                                    <Alert key={ key } className='w-100'
+                                           color={ (firstPrice > lastPrice ? 'danger' : 'success') }>
+                                        <Row className='my-2'>
                                             <Col className='center'>
                                                 <p className="m-0 text-muted font-20">{ market }</p>
                                             </Col>

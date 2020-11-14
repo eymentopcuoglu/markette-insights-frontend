@@ -38,6 +38,7 @@ export default function ProductAnalysis(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
 
+    const [activity, setActivity] = useState({ activityFrequency: 0, activityLength: 0 });
 
     //Date Wrapper change handler
     const onDateChange = dates => {
@@ -56,6 +57,16 @@ export default function ProductAnalysis(props) {
         setSelectedProduct(selectedSKU ? clientProducts.find(item => item.product_id === selectedSKU.value) : null);
     }, [selectedSKU]);
 
+
+    useEffect(() => {
+        if (selectedChannels && selectedChannels.length !== 0) {
+            setSelectedRetailers(markets.filter(market => selectedChannels.some(selectedChannel => selectedChannel.value === market.channel_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedChannels]);
 
     useEffect(() => {
         if (clientProducts.length !== 0 && !selectedSKU) {
@@ -86,13 +97,14 @@ export default function ProductAnalysis(props) {
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
                 <Col xl='2' className={ centerClass }>
-                    <SelectWrapper title='Retailer' data={ selectedChannels ? markets.filter(market => {
-                        for (let i = 0; i < selectedChannels.length; i++) {
-                            if (market.channel_id === selectedChannels[i].value)
-                                return true;
-                        }
-                        return false;
-                    }) : markets } selectedOptions={ selectedRetailers }
+                    <SelectWrapper title='Retailer'
+                                   data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
+                                       for (let i = 0; i < selectedChannels.length; i++) {
+                                           if (market.channel_id === selectedChannels[i].value)
+                                               return true;
+                                       }
+                                       return false;
+                                   }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
                 <Col xl='2' className={ centerClass }>
@@ -114,21 +126,24 @@ export default function ProductAnalysis(props) {
                     <LatestTransactions selectedProduct={ selectedProduct } />
                 </Col>
                 <Col xl="6">
-                    <CurrentPricing selectedProduct={ selectedProduct } />
+                    <CurrentPricing selectedProduct={ selectedProduct }
+                                    selectedRetailers={ selectedRetailers } />
                 </Col>
             </Row>
 
             <Row className='my-5 h-100'>
                 <Col xl='6'>
-                    <ProductDataRange selectedProduct={ selectedProduct } startDate={ startDate }
-                                      endDate={ endDate } />
+                    <ProductDataRange selectedProduct={ selectedProduct } setActivity={ setActivity }
+                                      startDate={ startDate } endDate={ endDate }
+                                      selectedRetailers={ selectedRetailers }
+                    />
                 </Col>
                 <Col xl="6" className='center'>
                     <Col className='m-3'>
-                        <ProductActivity title='Activity Frequency' value={ [25] } />
+                        <ProductActivity title='Activity Frequency' value={ [activity.activityFrequency] } />
                     </Col>
                     <Col className='m-3'>
-                        <ProductActivity title='Activity Length' value={ [25] } />
+                        <ProductActivity title='Activity Length' value={ [activity.activityLength] } />
                     </Col>
                 </Col>
             </Row>

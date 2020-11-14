@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import actions from '../../store/actions/index';
 import { getDatesBetweenDates } from "../../utils/dateUtil";
-import { fillDates } from "../../utils/pricingUtil";
+import { fillDates, getActivity } from "../../utils/pricingUtil";
+import { getMarketName } from "../../utils/namingUtil";
 
 export default function ProductDataRangeChart(props) {
 
@@ -80,6 +81,7 @@ export default function ProductDataRangeChart(props) {
 
     //After fetching productAnalysisDateRangeChartData
     useEffect(() => {
+
         if (productAnalysisDateRangeChartData.length !== 0 && props.selectedProduct && props.endDate) {
             const marketIds = [...new Set(productAnalysisDateRangeChartData.map(item => item.market))];
             for (let i = 0; i < marketIds.length; i++) {
@@ -94,21 +96,47 @@ export default function ProductDataRangeChart(props) {
                 })
             }
 
-            marketData.forEach(item => fillDates(item, props.startDate, props.endDate))
+            //Retailer based filtering
+            let filteredData = [...marketData];
+            if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                filteredData = filteredData
+                    .filter(item => {
+                        if (item.length !== 0)
+                            return props.selectedRetailers.some(retailer => retailer.value === parseInt(item[0].market))
+                        else
+                            return true;
+                    });
+            }
+
+            // //Calculate activity (there is fillDates method as well!)
+            let activity = [];
+            filteredData.forEach(item => {
+                fillDates(item, props.startDate, props.endDate);
+                activity.push(getActivity(item));
+            });
+            activity = activity.reduce((acc, item) => {
+                return {
+                    activityFrequency: acc.activityFrequency += item.activityFrequency,
+                    activityLength: acc.activityLength += item.activityLength
+                }
+            }, { activityFrequency: 0, activityLength: 0 });
+            activity.activityFrequency = (activity.activityFrequency / marketData.length).toFixed(2);
+            activity.activityLength = (activity.activityLength / marketData.length).toFixed(2);
+            props.setActivity(activity);
 
             //Adjust to apex series
-            marketData = marketData.map(item => {
+            filteredData = filteredData.map(item => {
                 return ({
-                    name: markets[parseInt(item[0].market) - 1].name,
+                    name: getMarketName(item[0].market, markets),
                     data: item.map(marketData => parseInt(marketData.pricen) / 100)
                 })
             });
-            setState({ ...state, series: marketData });
+            setState({ ...state, series: filteredData });
         }
-    }, [productAnalysisDateRangeChartData]);
+    }, [productAnalysisDateRangeChartData, props.selectedRetailers]);
     return (
         <React.Fragment>
-            <ReactApexChart options={ state.options } series={ state.series } type="line" height="290" />
+            <ReactApexChart options={ state.options } series={ state.series } type="line" height="350" />
         </React.Fragment>
     );
 }
