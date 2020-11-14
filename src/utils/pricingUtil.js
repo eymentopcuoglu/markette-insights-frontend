@@ -173,3 +173,40 @@ export function fillDates(products, startDate, endDate) {
     }
     return products;
 }
+
+export function getActivity(pricing) {
+    let counter = 0;
+    let currentActivityPrice = 0;
+    let isInActivity = false;
+    let activityLength = 0;
+    let activityFrequency = 0;
+
+    for (let i = 1; i < pricing.length; i++) {
+        if ((pricing[i].pricen === null) || (pricing[i - 1].pricen === null)) {
+            isInActivity = false;
+            counter = 0;
+            currentActivityPrice = 0;
+            continue;
+        }
+        if (pricing[i].pricen < pricing[i - 1].pricen) {
+            currentActivityPrice = pricing[i - 1].pricen;
+            isInActivity = true;
+            counter++;
+        } else if (isInActivity && (pricing[i].pricen === pricing[i - 1].pricen)) {
+            counter++;
+        } else {
+            if (isInActivity && (currentActivityPrice === pricing[i].pricen)) {
+                activityLength += counter;
+                activityFrequency++;
+                isInActivity = false;
+                counter = 0;
+                currentActivityPrice = 0;
+            }
+        }
+    }
+
+    return {
+        activityFrequency: parseFloat(((activityFrequency / pricing.length) * 100).toFixed(2)),
+        activityLength: parseFloat(((activityLength / pricing.length) * 100).toFixed(2))
+    }
+}

@@ -8,7 +8,8 @@ export default function CurrentPricingComparison(props) {
             <CardBody>
                 <h4 className="card-title">Current Pricing Comparison</h4>
                 <CurrentPricingComparisonChart selectedProduct1={ props.selectedProduct1 }
-                                               selectedProduct2={ props.selectedProduct2 } />
+                                               selectedProduct2={ props.selectedProduct2 }
+                                               selectedRetailers={ props.selectedRetailers } />
             </CardBody>
         </Card>
     );

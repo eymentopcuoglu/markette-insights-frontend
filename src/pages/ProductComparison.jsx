@@ -16,12 +16,11 @@ import CurrentPricingComparison from "../components/Product_Comparison/CurrentPr
 import DateRangeComparison from "../components/Product_Comparison/DateRangeComparison";
 
 import { getAvailability, getMinimumPrice } from "../utils/pricingUtil";
-import { getMarket } from "../utils/namingUtil";
+import { getMarketName } from "../utils/namingUtil";
 import YTDPricingComparison from "../components/Product_Comparison/YTDPricingComparison";
 import DateRangeParityComparison from "../components/Product_Comparison/DateRangeParityComparison";
 import moment from "moment";
-import PerfectScrollbar from "react-perfect-scrollbar";
-
+import DateRangeComparisonChart from "../components/charts/DateRangeComparisonChart";
 
 export default function ProductComparison(props) {
 
@@ -45,6 +44,9 @@ export default function ProductComparison(props) {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
 
+    const [activity1, setActivity1] = useState({ activityFrequency: 0, activityLength: 0 });
+    const [activity2, setActivity2] = useState({ activityFrequency: 0, activityLength: 0 });
+
     //Date Wrapper change handler
     const onDateChange = dates => {
         const [start, end] = dates;
@@ -56,20 +58,40 @@ export default function ProductComparison(props) {
         dispatch(actions.breadcrumb.setBreadcrumbItems("Product Comparison", state.breadcrumbItems));
     }, []);
 
+
+    useEffect(() => {
+        if (selectedChannels && selectedChannels.length !== 0) {
+            setSelectedRetailers(markets.filter(market => selectedChannels.some(selectedChannel => selectedChannel.value === market.channel_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedChannels]);
+
     //Change selectedProduct based on selectedSKU state
     useEffect(() => {
         if (selectedSKU1) {
             const product = clientProducts.find(item => item.product_id === selectedSKU1.value);
-            const minimumPricing = getMinimumPrice(product);
-            const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-            const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
-            const availability = getAvailability(product, markets);
-            setSelectedProduct1({
-                ...selectedProduct1, ...product,
-                minimumMarket,
-                minimumPrice,
-                availability
-            });
+            if (product.current_product_transactions.length === 0) {
+                setSelectedProduct1({
+                    ...selectedProduct1, ...product,
+                    minimumMarket: '',
+                    minimumPrice: '',
+                    availability: 0
+                });
+            } else {
+                const minimumPricing = getMinimumPrice(product);
+                const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
+                const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
+                const availability = getAvailability(product, markets);
+                setSelectedProduct1({
+                    ...selectedProduct1, ...product,
+                    minimumMarket,
+                    minimumPrice,
+                    availability
+                });
+            }
         }
     }, [selectedSKU1]);
 
@@ -77,16 +99,25 @@ export default function ProductComparison(props) {
     useEffect(() => {
         if (selectedSKU2) {
             const product = clientProducts.find(item => item.product_id === selectedSKU2.value);
-            const minimumPricing = getMinimumPrice(product);
-            const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
-            const minimumMarket = getMarket(minimumPricing.minimumMarket, markets);
-            const availability = getAvailability(product, markets);
-            setSelectedProduct2({
-                ...selectedProduct2, ...product,
-                minimumMarket,
-                minimumPrice,
-                availability
-            });
+            if (product.current_product_transactions.length === 0) {
+                setSelectedProduct2({
+                    ...selectedProduct2, ...product,
+                    minimumMarket: '',
+                    minimumPrice: '',
+                    availability: 0
+                });
+            } else {
+                const minimumPricing = getMinimumPrice(product);
+                const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
+                const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
+                const availability = getAvailability(product, markets);
+                setSelectedProduct2({
+                    ...selectedProduct2, ...product,
+                    minimumMarket,
+                    minimumPrice,
+                    availability
+                });
+            }
         }
     }, [selectedSKU2]);
 
@@ -108,10 +139,6 @@ export default function ProductComparison(props) {
         }
     }, [clientProducts]);
 
-    const vh50 = {
-        height: '50vh'
-    };
-    
     return (
         <>
             <Row className='center'>
@@ -120,7 +147,7 @@ export default function ProductComparison(props) {
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
                 <Col xl='2' className='center'>
-                    <SelectWrapper title='Retailer' data={ selectedChannels ? markets.filter(market => {
+                    <SelectWrapper title='Retailer' data={ (selectedChannels && selectedChannels.length !== 0)  ? markets.filter(market => {
                         for (let i = 0; i < selectedChannels.length; i++) {
                             if (market.channel_id === selectedChannels[i].value)
                                 return true;
@@ -135,7 +162,7 @@ export default function ProductComparison(props) {
                 </Col>
             </Row>
 
-            <Row className='center mt-4'>
+            <Row className='center mt-4 product-comparison-sticky'>
                 <Col xl='5'>
                     <ProductDescription image={ selectedProduct1 ? selectedProduct1.product_info.imageurl : '' }
                                         name={ selectedProduct1 ? selectedProduct1.product_info.name : '' }
@@ -159,91 +186,89 @@ export default function ProductComparison(props) {
                 </Col>
             </Row>
 
-            <PerfectScrollbar>
-                <div style={ vh50 }>
-                    <Row className='center my-5 h-100'>
-                        <Col xl='3'>
-                            <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
-                                          value={ selectedProduct1 ? selectedProduct1.minimumMarket + ' - ' +
-                                              selectedProduct1.minimumPrice : 'Please select a product' } />
-                        </Col>
-                        <Col xl='2' className="text-center">
-                            <ProductActivity title='Availability'
-                                             value={ selectedProduct1 ? [selectedProduct1.availability] : [0] } />
-                        </Col>
-                        <Col xl='1' />
-                        <Col xl='3'>
-                            <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
-                                          value={ selectedProduct2 ? selectedProduct2.minimumMarket + ' - ' +
-                                              selectedProduct2.minimumPrice : 'Please select a product' } />
-                        </Col>
-                        <Col xl='2' className="text-center">
-                            <ProductActivity title='Availability'
-                                             value={ selectedProduct2 ? [selectedProduct2.availability] : [0] } />
-                        </Col>
-                    </Row>
+            <Row className='center my-5 h-100'>
+                <Col xl='3'>
+                    <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
+                                  value={ selectedProduct1 ? selectedProduct1.minimumMarket + ' - ' +
+                                      selectedProduct1.minimumPrice : 'Please select a product' } />
+                </Col>
+                <Col xl='2' className="text-center">
+                    <ProductActivity title='Availability'
+                                     value={ selectedProduct1 ? [selectedProduct1.availability] : [0] } />
+                </Col>
+                <Col xl='1' />
+                <Col xl='3'>
+                    <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
+                                  value={ selectedProduct2 ? selectedProduct2.minimumMarket + ' - ' +
+                                      selectedProduct2.minimumPrice : 'Please select a product' } />
+                </Col>
+                <Col xl='2' className="text-center">
+                    <ProductActivity title='Availability'
+                                     value={ selectedProduct2 ? [selectedProduct2.availability] : [0] } />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
-                                                      selectedProduct2={ selectedProduct2 } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
+                                              selectedProduct2={ selectedProduct2 }
+                                              selectedRetailers={ selectedRetailers }/>
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <DateRangeComparison selectedProduct1={ selectedProduct1 }
-                                                 selectedProduct2={ selectedProduct2 }
-                                                 startDate={ startDate }
-                                                 endDate={ endDate } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <DateRangeComparison selectedProduct1={ selectedProduct1 }
+                                         selectedProduct2={ selectedProduct2 }
+                                         selectedRetailers={ selectedRetailers }
+                                         setActivity1={ setActivity1 }
+                                         setActivity2={ setActivity2 }
+                                         startDate={ startDate }
+                                         endDate={ endDate } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <YTDPricingComparison selectedProduct1={ selectedProduct1 }
-                                                  selectedProduct2={ selectedProduct2 } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <YTDPricingComparison selectedProduct1={ selectedProduct1 }
+                                          selectedProduct2={ selectedProduct2 }
+                                          selectedRetailers={ selectedRetailers }/>
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg={ 5 }>
-                            <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
-                                                       selectedProduct2={ selectedProduct2 }
-                                                       startDate={ startDate }
-                                                       endDate={ endDate } />
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg={ 5 }>
+                    <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
+                                               selectedProduct2={ selectedProduct2 }
+                                               selectedRetailers={ selectedRetailers }
+                                               startDate={ startDate }
+                                               endDate={ endDate } />
+                </Col>
+                <Col lg={ 5 }>
+                    <ChartDescription />
+                </Col>
+            </Row>
 
-                    <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                        <Col lg="5" className='center'>
-                            <Row className='center'>
-                                <Col className='m-5'>
-                                    <ProductActivity title='Activity Frequency' value={ [25] } />
-                                </Col>
-                                <Col className='m-5'>
-                                    <ProductActivity title='Activity Frequency' value={ [25] } />
-                                </Col>
-                            </Row>
-                        </Col>
-                        <Col lg={ 5 }>
-                            <ChartDescription />
-                        </Col>
-                    </Row>
-                </div>
-            </PerfectScrollbar>
+            <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
+                <Col lg='2'>
+                    <ProductActivity title='Activity Frequency' value={ [activity1.activityFrequency] } />
+                </Col>
+                <Col lg='5'>
+                    <ChartDescription />
+                </Col>
+                <Col lg='2'>
+                    <ProductActivity title='Activity Frequency' value={ [activity2.activityFrequency] } />
+                </Col>
+            </Row>
         </>
     )
 }

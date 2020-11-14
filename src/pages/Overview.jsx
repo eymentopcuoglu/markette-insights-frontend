@@ -7,6 +7,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 import actions from "../store/actions/index";
 import { getMinimumPrice, getAveragePrice, getStandardDeviation } from '../utils/pricingUtil';
+import { getCategoryId } from '../utils/namingUtil';
 
 //Import Components
 import MiniCard from '../components/MiniCard';
@@ -17,9 +18,6 @@ import ProductRow from "../components/Overview/ProductRow";
 
 export default function Overview(props) {
 
-    function getCategory(subCategory) {
-        return subCategories[subCategory - 1].category_id;
-    }
 
     const dispatch = useDispatch();
     const centerClass = 'd-flex justify-content-center align-items-center';
@@ -34,6 +32,10 @@ export default function Overview(props) {
     const [selectedSubBrands, setSelectedSubBrands] = useState(null);
     const [selectedRetailers, setSelectedRetailers] = useState(null);
     const [selectedSKUs, setSelectedSKUs] = useState(null);
+
+    const [selectSKUData, setSelectSKUData] = useState(null);
+    const [shownData, setShownData] = useState(null);
+
 
     //Date Filter
     const [date, setDate] = useState(new Date());
@@ -57,6 +59,67 @@ export default function Overview(props) {
     }, []);
 
     useEffect(() => {
+        if (selectedCategories && selectedCategories.length !== 0) {
+            setSelectedSubCategories(subCategories.filter(subCategory => selectedCategories.some(selectedCategory => selectedCategory.value === subCategory.category_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedCategories]);
+
+    useEffect(() => {
+        if (selectedBrands && selectedBrands.length !== 0) {
+            setSelectedSubBrands(subBrands.filter(subBrand => selectedBrands.some(selectedBrand => selectedBrand.value === subBrand.brand_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedBrands]);
+
+    useEffect(() => {
+        if (selectedChannels && selectedChannels.length !== 0) {
+            setSelectedRetailers(markets.filter(market => selectedChannels.some(selectedChannel => selectedChannel.value === market.channel_id))
+                .map(item => ({
+                    label: item.name,
+                    value: item.id
+                })));
+        }
+    }, [selectedChannels]);
+
+    //Filter the data
+    useEffect(() => {
+        if (clientProducts) {
+            let temp = clientProducts;
+            const isSelectedSubCategory = selectedSubCategories && selectedSubCategories.length !== 0;
+            const isSelectedSubBrand = selectedSubBrands && selectedSubBrands.length !== 0;
+            const isSelectedCategory = selectedCategories && selectedCategories.length !== 0;
+            const isSelectedBrand = selectedBrands && selectedBrands.length !== 0;
+
+            if (isSelectedSubCategory) {
+                temp = temp.filter(product => selectedSubCategories.some(subCategory => subCategory.value === product.category_id));
+            }
+            if (isSelectedSubBrand) {
+                temp = temp.filter(product => selectedSubBrands.some(subBrand => subBrand.value === product.sub_brand_id));
+            }
+            if (isSelectedCategory && !isSelectedSubCategory) {
+                temp = temp.filter(product => selectedCategories.some(category => category.value === getCategoryId(subCategories, product.category_id)));
+            }
+            if (isSelectedBrand && !isSelectedSubBrand) {
+                temp = temp.filter(product => selectedBrands.some(brand => brand.value === product.brand_id));
+            }
+            setShownData(temp);
+            temp = temp.map(item => ({
+                name: item.product_info.name,
+                id: item.product_id
+            }));
+            setSelectSKUData(temp);
+        }
+    }, [selectedCategories, selectedSubCategories, selectedBrands, selectedSubBrands, selectedSizes]);
+
+
+    useEffect(() => {
         if (markets && clientProducts) {
             const data = markets.filter(market => {
                 return clientProducts.some(product => product.current_product_transactions.some(item => parseInt(item.market) === market.id));
@@ -66,7 +129,7 @@ export default function Overview(props) {
             }));
             setSelectedRetailers(data);
         }
-    }, [markets, selectedCategories, selectedBrands, selectedChannels, selectedSizes, selectedSubCategories, selectedSubBrands, selectedSKUs]);
+    }, [markets, selectedSizes, selectedSubCategories, selectedSubBrands, selectedSKUs]);
 
     return (
         <React.Fragment>
@@ -103,13 +166,13 @@ export default function Overview(props) {
             </Row>
 
 
-            <Row className='d-flex align-items-center'>
+            <Row className='d-flex align-items-center mt-2'>
                 <Col xl='3'>
                     <SearchBar value={ search } handleChange={ handleSearchBar } />
                 </Col>
                 <Col className={ centerClass }>
                     <SelectWrapper title='Sub Category'
-                                   data={ selectedCategories ? subCategories.filter(subCategory => {
+                                   data={ (selectedCategories && selectedCategories.length !== 0) ? subCategories.filter(subCategory => {
                                        for (let i = 0; i < selectedCategories.length; i++) {
                                            if (subCategory.category_id === selectedCategories[i].value)
                                                return true;
@@ -120,37 +183,40 @@ export default function Overview(props) {
                                    setSelectedOptions={ setSelectedSubCategories } />
                 </Col>
                 <Col className={ centerClass }>
-                    <SelectWrapper title='Sub Brand' data={ selectedBrands ? subBrands.filter(subBrand => {
-                        for (let i = 0; i < selectedBrands.length; i++) {
-                            if (subBrand.brand_id === selectedBrands[i].value)
-                                return true;
-                        }
-                        return false;
-                    }) : subBrands } selectedOptions={ selectedSubBrands }
+                    <SelectWrapper title='Sub Brand'
+                                   data={ (selectedBrands && selectedBrands.length !== 0) ? subBrands.filter(subBrand => {
+                                       for (let i = 0; i < selectedBrands.length; i++) {
+                                           if (subBrand.brand_id === selectedBrands[i].value)
+                                               return true;
+                                       }
+                                       return false;
+                                   }) : subBrands } selectedOptions={ selectedSubBrands }
                                    setSelectedOptions={ setSelectedSubBrands } />
                 </Col>
                 <Col className='center'>
-                    <SelectWrapper title='Retailer' data={ selectedChannels ? markets.filter(market => {
-                        for (let i = 0; i < selectedChannels.length; i++) {
-                            if (market.channel_id === selectedChannels[i].value)
-                                return true;
-                        }
-                        return false;
-                    }) : markets } selectedOptions={ selectedRetailers }
+                    <SelectWrapper title='Retailer'
+                                   data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
+                                       for (let i = 0; i < selectedChannels.length; i++) {
+                                           if (market.channel_id === selectedChannels[i].value)
+                                               return true;
+                                       }
+                                       return false;
+                                   }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
                 <Col className={ centerClass }>
-                    <SelectWrapper title='SKU' data={ [{ name: 'AVAILABLE VERY SOON!' }] }
+                    <SelectWrapper title='SKU' data={ selectSKUData }
                                    selectedOptions={ selectedSKUs } setSelectedOptions={ setSelectedSKUs } />
                 </Col>
             </Row>
 
+            <PerfectScrollbar className='overflow-inherit'>
 
-            <PerfectScrollbar>
-                <Row className='mt-5'>
-                    <Col xl="3" className='center w-100'>
-                        <Card className="text-white bg-primary w-100">
-                            <CardBody>
+                <Row className='mt-5 mb-3 table-column-titles'>
+
+                    <Col xl="3" className='w-100'>
+                        <Card className="text-white bg-primary w-100 h-75">
+                            <CardBody className='center'>
                                 <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Products</p>
                             </CardBody>
                         </Card>
@@ -159,39 +225,38 @@ export default function Overview(props) {
                     <Col xl="3">
                         <Row>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Minimum
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Average
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
                             <Col xl="4">
-                                <Card className="text-white bg-primary">
-                                    <CardBody>
+                                <Card className="text-white calculated-fields-title-background h-75">
+                                    <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Standard
                                             Deviation</p>
                                     </CardBody>
                                 </Card>
                             </Col>
-
                         </Row>
                     </Col>
 
                     <Col xl="6">
-                        <Row className='retailers'>
+                        <Row className='retailers h-100'>
                             { selectedRetailers ? selectedRetailers.map((retailer, key) => (
                                 <Col key={ key } xl="3">
-                                    <Card className="text-white bg-primary w-100">
-                                        <CardBody>
+                                    <Card className="text-white bg-primary w-100 h-75">
+                                        <CardBody className='center'>
                                             <p className='font-size-17 text-center m-auto overflow-wrap-normal'>{ retailer.label }</p>
                                         </CardBody>
                                     </Card>
@@ -201,33 +266,15 @@ export default function Overview(props) {
                         </Row>
                     </Col>
                 </Row>
-
-                { clientProducts
+                { shownData && shownData
                     //Search filter
                     .filter(product => product.product_info.name.toLowerCase().indexOf(search) !== -1)
 
-                    //Sub category filter
                     .filter(product => {
-                        if (selectedSubCategories) {
-                            for (let i = 0; i < selectedSubCategories.length; i++) {
-                                if (product.category_id === selectedSubCategories[i].value)
-                                    return true;
-                            }
-                            return false;
-                        }
-                        return true;
-                    })
-
-                    //Category filter
-                    .filter(product => {
-                        if (selectedCategories) {
-                            for (let i = 0; i < selectedCategories.length; i++) {
-                                if (getCategory(product.category_id) === selectedCategories[i].value)
-                                    return true;
-                            }
-                            return false;
-                        }
-                        return true;
+                        if (selectedSKUs && selectedSKUs.length !== 0) {
+                            return selectedSKUs.some(sku => sku.value === product.product_id);
+                        } else
+                            return true;
                     })
 
                     .map((product, key) => {

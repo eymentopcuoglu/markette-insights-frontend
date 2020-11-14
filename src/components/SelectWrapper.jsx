@@ -4,9 +4,10 @@ import Select from "react-select";
 
 export default function SelectWrapper(props) {
     const customStyles = {
+        menu: provided => ({ ...provided, zIndex: 2 }),
         valueContainer: (provided, state) => ({
             ...provided,
-            maxHeight: '85px'
+            maxHeight: '38px'
         }),
     };
 
@@ -14,6 +15,7 @@ export default function SelectWrapper(props) {
         <FormGroup className="mb-0 w-100">
             <Label className="control-label">{ props.title }</Label>
             <Select
+                controlShouldRenderValue = { false }
                 hideSelectedOptions={ false }
                 value={ props.selectedOptions }
                 isMulti={ !props.isSearchable }

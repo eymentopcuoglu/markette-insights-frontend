@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import moment from "moment";
 import { useSelector } from "react-redux";
-import { getMarket } from "../../utils/namingUtil";
+import { getMarketName } from "../../utils/namingUtil";
 
 export default function CurrentPricingChart(props) {
 
@@ -11,27 +11,35 @@ export default function CurrentPricingChart(props) {
 
     useEffect(() => {
         setData(
-            (props.selectedProduct1 && props.selectedProduct2) ? props.selectedProduct1.current_product_transactions.map(product1 => {
+            (props.selectedProduct1 && props.selectedProduct2) ? props.selectedProduct1.current_product_transactions.reduce((result, product1) => {
 
                 //Find second product's price in that market
                 const product2Price = props.selectedProduct2.current_product_transactions.find(product2 => product2.market === product1.market);
 
-                //If product2Price found
                 if (product2Price) {
                     const parity = (product1.pricen / (product2Price.pricen)) * 100;
-                    return ({
-                        name: getMarket(product1.market, markets),
-                        data: [parity]
-                    });
-                } else {
-                    return ({
-                        name: getMarket(product1.market, markets),
-                        data: []
-                    });
+
+                    //Retailer based filtering
+                    if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+
+                        if (props.selectedRetailers.some(retailer => retailer.value === parseInt(product1.market))) {
+                            result.push({
+                                name: getMarketName(product1.market, markets),
+                                data: [parity]
+                            });
+                        }
+
+                    } else {
+                        result.push({
+                            name: getMarketName(product1.market, markets),
+                            data: [parity]
+                        });
+                    }
                 }
-            }) : []
+                return result;
+            }, []) : []
         );
-    }, [props.selectedProduct1, props.selectedProduct2]);
+    }, [props.selectedProduct1, props.selectedProduct2, props.selectedRetailers]);
 
     const [data, setData] = useState([]);
     const [state, setState] = useState({
@@ -119,5 +127,5 @@ export default function CurrentPricingChart(props) {
             },
         }
     });
-    return <ReactApexChart options={ state.options } series={ data } type="bar" height="290" />
+    return <ReactApexChart options={ state.options } series={ data } type="bar" height="350" />
 }

@@ -1,53 +1,63 @@
 import React from 'react';
-import { Card, CardBody, Row, Col } from "reactstrap";
+import { Card, CardBody, Row, Col, Alert } from "reactstrap";
 import { useSelector } from "react-redux";
 import moment from "moment";
+import PerfectScrollbar from "react-perfect-scrollbar";
 
-//Import Images
 export default function LatestTransactions(props) {
 
     const { markets } = useSelector(state => state.data);
 
     return (
-        <React.Fragment>
-            <Card className='h-100'>
-                <CardBody>
-                    <h4 className="card-title mb-4">Latest Changes in Pricing</h4>
+        <Card className='h-100 pr-2'>
+            <CardBody>
+                <h4 className="card-title mb-4">Latest Changes in Pricing</h4>
+                <Row className='alert mt-2 mb-0'>
+                    <Col className='center'>
+                        <p className="m-0 font-size-14 font-weight-medium">Market</p>
+                    </Col>
+                    <Col className='center'>
+                        <p className="m-0 font-size-14 font-weight-medium">First Price</p>
+                    </Col>
+                    <Col className='center'>
+                        <p className="m-0  font-size-14 font-weight-medium">Last Price</p>
+                    </Col>
+                    <Col className='center'>
+                        <p className="m-0 font-size-14 font-weight-medium">Date</p>
+                    </Col>
+                </Row>
+                <PerfectScrollbar>
                     {
-                        props.selectedProduct ? props.selectedProduct.logs.map((log, key) => {
+                        props.selectedProduct && props.selectedProduct.logs.map((log, key) => {
                                 const lastPrice = parseInt(log.pricen1) / 100;
                                 const firstPrice = parseInt(log.pricen2) / 100;
                                 const market = markets[parseInt(log.market) - 1].name;
                                 const date = moment(log.created_at).format('DD.MM.YYYY');
                                 return (
-                                    <Row key={ key } className='my-2'>
-                                        <Col lg='4' className='center'>
-                                            <img src={ props.selectedProduct.product_info.imageurl } alt="product"
-                                                 className="avatar-xs rounded-circle mr-2 float-left" />
-                                            <p className='m-auto'>{ props.selectedProduct.product_info.name }</p>
-                                        </Col>
-                                        <Col className='center'>
-                                            <i className={ "mdi mdi-checkbox-blank-circle  text-" + (firstPrice > lastPrice ? 'danger' : 'success') } />
-                                            <p className="m-0 text-muted font-16"> { market }</p>
-                                        </Col>
-                                        <Col className='center'>
-                                            <p className="m-0 text-muted font-16">First Price: { firstPrice }₺</p>
-                                        </Col>
-                                        <Col className='center'>
-                                            <p className="m-0 text-muted font-16">Last Price: { lastPrice }₺</p>
-                                        </Col>
-                                        <Col className='center'>
-                                            <p className="m-0 text-muted font-16">{ date }</p>
-                                        </Col>
-
-                                    </Row>
+                                    <Alert key={ key } className='w-100'
+                                           color={ (firstPrice > lastPrice ? 'danger' : 'success') }>
+                                        <Row className='my-2'>
+                                            <Col className='center'>
+                                                <p className="m-0 text-muted font-20">{ market }</p>
+                                            </Col>
+                                            <Col className='center'>
+                                                <p className="m-0 text-muted font-20">{ firstPrice }₺</p>
+                                            </Col>
+                                            <Col className='center'>
+                                                <p className="m-0 text-muted font-20">{ lastPrice }₺</p>
+                                            </Col>
+                                            <Col className='center'>
+                                                <p className="m-0 text-muted font-20">{ date }</p>
+                                            </Col>
+                                        </Row>
+                                    </Alert>
                                 );
                             }
-                        ) : null
+                        )
                     }
-                </CardBody>
-            </Card>
-        </React.Fragment>
+                </PerfectScrollbar>
+            </CardBody>
+        </Card>
     );
 
 }

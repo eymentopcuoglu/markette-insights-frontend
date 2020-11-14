@@ -1,46 +1,83 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardBody } from "reactstrap";
-import C3Chart from 'react-c3js';
-import 'c3/c3.css';
 import { useSelector } from "react-redux";
+import ReactApexChart from 'react-apexcharts';
 
 export default function MarketAvailability() {
     const { numberOfRetailers, markets } = useSelector(state => state.data);
 
-    const data = {
-        columns: [
-            ["Total number of markets in our system", markets.length],
-            ["Availability", numberOfRetailers]
-        ],
-        type: "donut",
-    };
-
-    const donut = {
-        title: "Availability",
-        width: 30,
-        label: { show: !1 }
-    };
-
-    const color = {
-        pattern: ["#f0f1f4", "#7a6fbe", "#28bbe3", "#2f8ee0"]
-    };
-
+    const [state, setState] = useState({
+        options: {
+            colors: ['#7A6FBE'],
+            chart: {
+                height: 250,
+                type: 'radialBar',
+            },
+            plotOptions: {
+                radialBar: {
+                    offsetY: -20,
+                    hollow: {
+                        margin: 15,
+                        size: "70%",
+                    },
+                    dataLabels: {
+                        name: {
+                            fontFamily: 'Poppins',
+                        },
+                        value: {
+                            color: "#5b626b",
+                            fontSize: "24px",
+                            fontFamily: 'Poppins',
+                            fontWeight: 500
+                        }
+                    }
+                }
+            },
+            responsive: [{
+                breakpoint: 1200,
+                options: {
+                    plotOptions: {
+                        radialBar: {
+                            offsetY: -10,
+                            hollow: {
+                                margin: 15,
+                                size: "70%",
+                            },
+                            dataLabels: {
+                                name: {
+                                    fontFamily: 'Poppins',
+                                    fontSize: "14px",
+                                },
+                                value: {
+                                    color: "#5b626b",
+                                    fontSize: "16px",
+                                    fontFamily: 'Poppins'
+                                }
+                            }
+                        }
+                    },
+                },
+            }],
+            labels: ['Availability'],
+        }
+    });
     return (
-        <Card className="m-b-20 h-100">
+        <Card className="h-100">
             <CardBody>
                 <h4 className="card-title mb-4">Market Availability</h4>
-                <div className="row text-center mt-4">
+                <div className="row text-center my-2">
                     <div className="col-sm-6">
                         <h5 className="mb-0 font-size-20">{ numberOfRetailers }</h5>
-                        <p className="text-muted">Availability</p>
+                        <p className="text-muted">Available markets</p>
                     </div>
                     <div className="col-sm-6">
                         <h5 className="mb-0 font-size-20">{ markets.length }</h5>
                         <p className="text-muted">Total number of markets</p>
                     </div>
-
                 </div>
-                <C3Chart data={ data } donut={ donut } color={ color } />
+                <ReactApexChart options={ state.options }
+                                series={ [((numberOfRetailers / markets.length) * 100).toFixed(2)] }
+                                type="radialBar" />
             </CardBody>
         </Card>
     );

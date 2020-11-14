@@ -8,9 +8,10 @@ export default function YTDPricingComparison(props) {
         <Card className='h-100'>
             <CardBody>
                 <h4 className="card-title mb-4">Year-to-date Pricing</h4>
-                    <YTDPricingComparisonChart selectedProduct1={ props.selectedProduct1 }
-                                               selectedProduct2={ props.selectedProduct2 }
-                    />
+                <YTDPricingComparisonChart selectedProduct1={ props.selectedProduct1 }
+                                           selectedProduct2={ props.selectedProduct2 }
+                                           selectedRetailers={ props.selectedRetailers }
+                />
             </CardBody>
         </Card>
     );

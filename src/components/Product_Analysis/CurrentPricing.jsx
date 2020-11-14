@@ -7,7 +7,8 @@ export default function CurrentPricing(props) {
         <Card className='h-100'>
             <CardBody>
                 <h4 className="card-title">Current Pricing</h4>
-                <CurrentPricingChart selectedProduct={ props.selectedProduct } />
+                <CurrentPricingChart selectedProduct={ props.selectedProduct }
+                                     selectedRetailers={ props.selectedRetailers }/>
             </CardBody>
         </Card>
     );

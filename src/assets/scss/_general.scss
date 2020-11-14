@@ -16,10 +16,18 @@
   flex-wrap: nowrap;
 }
 
+.overflow-inherit {
+  overflow: inherit !important;
+}
+
 .overflow-wrap-normal {
   overflow-wrap: normal
 }
 
 .h-85px {
   max-height: 85px;
+}
+
+.react-datepicker-popper {
+  z-index: 2;
 }

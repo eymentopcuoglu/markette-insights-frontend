@@ -2,20 +2,54 @@ import React, { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 import moment from "moment";
 import { useSelector } from "react-redux";
+import { getAveragePrice } from "../../utils/pricingUtil";
+import { getMarketName } from "../../utils/namingUtil";
 
 export default function CurrentPricingChart(props) {
-
 
     const { markets } = useSelector(state => state.data);
 
     useEffect(() => {
-        setData(
-            props.selectedProduct ? props.selectedProduct.current_product_transactions.map(item => ({
-                name: markets[parseInt(item.market) - 1].name,
-                data: [parseInt(item.pricen) / 100]
-            })) : []
-        );
-    }, [props.selectedProduct]);
+        if (props.selectedProduct) {
+            let filteredData = { ...props.selectedProduct };
+            if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
+                filteredData.current_product_transactions = filteredData.current_product_transactions
+                    .filter(item => props.selectedRetailers.some(retailer => retailer.value === item.market));
+            }
+            setData(
+                filteredData.current_product_transactions.map(item => ({
+                    name: getMarketName(item.market, markets),
+                    data: [parseInt(item.pricen) / 100]
+                }))
+            );
+            const average = getAveragePrice(filteredData);
+            setState({
+                ...state,
+                options: {
+                    ...state.options,
+                    annotations: {
+                        yaxis: [
+                            {
+                                y: average,
+                                strokeDashArray: 10,
+                                borderColor: '#FF0000',
+                                label: {
+                                    borderWidth: 3,
+                                    borderColor: '#FF0000',
+                                    offsetY: 7,
+                                    style: {
+                                        color: '#fff',
+                                        background: '#FF0000'
+                                    },
+                                    text: 'Average Price'
+                                }
+                            }
+                        ]
+                    }
+                }
+            })
+        }
+    }, [props.selectedProduct, props.selectedRetailers]);
 
     const [data, setData] = useState([]);
     const [state, setState] = useState({
@@ -32,7 +66,6 @@ export default function CurrentPricingChart(props) {
                     dataLabels: {
                         show: false
                     },
-
                 },
             },
             legend: {
@@ -44,7 +77,7 @@ export default function CurrentPricingChart(props) {
             grid: {
                 borderColor: '#f8f8fa',
                 row: {
-                    colors: ['transparent', 'transparent'], // takes an array which will be repeated on columns
+                    colors: ['transparent', 'transparent'],
                     opacity: 0.5
                 },
             },
@@ -64,5 +97,5 @@ export default function CurrentPricingChart(props) {
             }
         }
     });
-    return <ReactApexChart options={ state.options } series={ data } type="bar" height="290" />
+    return <ReactApexChart options={ state.options } series={ data } type="bar" height="350" />
 }
