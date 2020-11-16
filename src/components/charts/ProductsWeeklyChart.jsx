@@ -11,7 +11,7 @@ export default function ProductsWeeklyChart(props) {
 
     useEffect(() => {
         if (clientProducts.length !== 0) {
-            const currentProduct = clientProducts.find(item => item.product_id === userProducts[props.currentSKU].product_id);
+            const currentProduct = userProducts.find(item => item.product_id === userProducts[props.currentSKU].product_id);
             const marketIds = [...new Set(currentProduct.product_transactions.map(item => item.market))];
             for (let i = 0; i < marketIds.length; i++) {
                 //Filter by market

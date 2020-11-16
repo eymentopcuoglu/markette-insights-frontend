@@ -1,3 +1,15 @@
 .product-image {
   max-height: 225px;
 }
+
+.pa-components {
+  height: 480px !important;
+  margin: 1rem auto;
+}
+
+.latest-column-titles {
+  position: sticky;
+  background-color: #fff;
+  top: 35px;
+  z-index: 1;
+}
