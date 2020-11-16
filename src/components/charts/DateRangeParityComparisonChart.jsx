@@ -149,7 +149,6 @@ export default function DateRangeParityComparisonChart(props) {
                         }
                     });
 
-
                     setState({
                         options: {
                             ...state.options,
@@ -160,7 +159,7 @@ export default function DateRangeParityComparisonChart(props) {
                         },
                         series: [{
                             name: props.selectedProduct1.product_info.name,
-                            data: reducedProduct1.map(item => item.data[0])
+                            data: reducedProduct1.map(item => (item.data.length !== 0) ? item.data[0] : null)
                         }]
                     });
                 }
