@@ -125,12 +125,12 @@ export default function ProductComparison(props) {
     useEffect(() => {
         if (clientProducts.length !== 0 && !selectedSKU1 && !selectedSKU2) {
             setSelectedSKU1({
-                label: clientProducts[11].product_info.name,
-                value: clientProducts[11].product_id
+                label: clientProducts[0].product_info.name,
+                value: clientProducts[0].product_id
             });
             setSelectedSKU2({
-                label: clientProducts[2].product_info.name,
-                value: clientProducts[2].product_id
+                label: clientProducts[10].product_info.name,
+                value: clientProducts[10].product_id
             });
             const today = new Date();
             const beforeWeek = moment(today).subtract(6, 'day').toDate();

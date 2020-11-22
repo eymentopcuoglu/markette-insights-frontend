@@ -71,8 +71,8 @@ export default function ProductAnalysis(props) {
     useEffect(() => {
         if (clientProducts.length !== 0 && !selectedSKU) {
             setSelectedSKU({
-                label: clientProducts[11].product_info.name,
-                value: clientProducts[11].product_id
+                label: clientProducts[1].product_info.name,
+                value: clientProducts[1].product_id
             });
             const today = new Date();
             const beforeWeek = moment(today).subtract(6, 'day').toDate();

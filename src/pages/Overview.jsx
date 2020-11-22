@@ -107,7 +107,7 @@ export default function Overview(props) {
                 temp = temp.filter(product => selectedCategories.some(category => category.value === getCategoryId(subCategories, product.category_id)));
             }
             if (isSelectedBrand && !isSelectedSubBrand) {
-                temp = temp.filter(product => selectedBrands.some(brand => brand.value === product.brand_id));
+                temp = temp.filter(product => selectedBrands.some(brand => brand.value === product.product_info.brand_id));
             }
             setShownData(temp);
             temp = temp.map(item => ({
