@@ -3,9 +3,9 @@ import ProductActivityChart from "./charts/ProductActivityChart";
 
 export default function ProductActivity(props) {
     return (
-        <>
+        <div>
             <h5 className="font-size-16 text-center">{ props.title }</h5>
             <ProductActivityChart value={ props.value } />
-        </>
+        </div>
     );
 }

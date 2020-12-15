@@ -7,7 +7,7 @@ export default function DateWrapper(props) {
     return (
         <FormGroup className="mb-0 w-100">
             <Label className="control-label">Date</Label>
-            <InputGroup>
+            <InputGroup className='flex-nowrap'>
                 { props.isDataRange ?
                     <DatePicker
                         selected={ props.startDate }
@@ -16,11 +16,15 @@ export default function DateWrapper(props) {
                         endDate={ props.endDate }
                         selectsRange
                         className='form-control mb-0 w-100'
+                        minDate={ new Date('2020-10-22') }
+                        maxDate={ new Date() }
                     /> :
                     <DatePicker
                         selected={ props.startDate }
                         onChange={ date => props.onDateChange(date) }
                         className='form-control'
+                        minDate={ new Date('2020-10-22') }
+                        maxDate={ new Date() }
                     />
                 }
                 <InputGroupAddon addonType="append">

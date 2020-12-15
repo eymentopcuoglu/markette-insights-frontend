@@ -1,3 +1,8 @@
+import {
+    CHANGE_SIDEBAR_TYPE,
+    TOGGLE
+} from '../../actionTypes';
+
 const initialState = {
     layoutType: "vertical",
     topbarTheme: "dark",
@@ -12,6 +17,16 @@ const initialState = {
 
 const layoutReducer = (state = initialState, action) => {
     switch (action.type) {
+        case CHANGE_SIDEBAR_TYPE:
+            return {
+                ...state,
+                leftSideBarType: action.payload.sidebarType
+            };
+        case TOGGLE:
+            return {
+                ...state,
+                is_toggle: action.payload
+            }
         default:
             return { ...state };
     }

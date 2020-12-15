@@ -17,7 +17,6 @@ import moment from "moment";
 export default function ProductAnalysis(props) {
 
     const dispatch = useDispatch();
-    const centerClass = 'd-flex justify-content-center align-items-center';
 
     const { markets, channels, clientProducts } = useSelector(state => state.data);
 
@@ -71,8 +70,8 @@ export default function ProductAnalysis(props) {
     useEffect(() => {
         if (clientProducts.length !== 0 && !selectedSKU) {
             setSelectedSKU({
-                label: clientProducts[11].product_info.name,
-                value: clientProducts[11].product_id
+                label: clientProducts[1].product_info.name,
+                value: clientProducts[1].product_id
             });
             const today = new Date();
             const beforeWeek = moment(today).subtract(6, 'day').toDate();
@@ -85,18 +84,18 @@ export default function ProductAnalysis(props) {
     return (
         <React.Fragment>
 
-            <Row className={ centerClass }>
-                <Col xl='2'>
+            <Row className='center'>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className='mb-3'>
                     <SelectWrapper title='Products' isSearchable={ true }
                                    data={ clientProducts }
                                    selectedOptions={ selectedSKU }
                                    setSelectedOptions={ setSelectedSKU } />
                 </Col>
-                <Col xl='2' className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className='center mb-3'>
                     <SelectWrapper title='Channel' data={ channels } selectedOptions={ selectedChannels }
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
-                <Col xl='2' className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className='center mb-3'>
                     <SelectWrapper title='Retailer'
                                    data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
                                        for (let i = 0; i < selectedChannels.length; i++) {
@@ -107,7 +106,7 @@ export default function ProductAnalysis(props) {
                                    }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
-                <Col xl='2' className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className='center mb-3'>
                     <DateWrapper isDataRange={ true } startDate={ startDate } endDate={ endDate }
                                  onDateChange={ onDateChange } />
                 </Col>
@@ -115,36 +114,34 @@ export default function ProductAnalysis(props) {
 
 
             <Row className='center mt-4'>
-                <Col xl='6'>
+                <Col xs={ 12 } xl={ 6 }>
                     <ProductDescription image={ selectedProduct ? selectedProduct.product_info.imageurl : '' }
                                         name={ selectedProduct ? selectedProduct.product_info.name : '' } />
                 </Col>
             </Row>
 
             <Row className='mt-5'>
-                <Col xl='6'>
+                <Col xs={ 12 } xl={ 6 }>
                     <LatestTransactions selectedProduct={ selectedProduct } />
                 </Col>
-                <Col xl="6">
+                <Col xs={ 12 } xl={ 6 }>
                     <CurrentPricing selectedProduct={ selectedProduct }
                                     selectedRetailers={ selectedRetailers } />
                 </Col>
             </Row>
 
             <Row className='my-5 h-100'>
-                <Col xl='6'>
+                <Col xs={ 12 } xl={ 6 } className='mb-5'>
                     <ProductDataRange selectedProduct={ selectedProduct } setActivity={ setActivity }
                                       startDate={ startDate } endDate={ endDate }
                                       selectedRetailers={ selectedRetailers }
                     />
                 </Col>
-                <Col xl="6" className='center'>
-                    <Col className='m-3'>
-                        <ProductActivity title='Activity Frequency' value={ [activity.activityFrequency] } />
-                    </Col>
-                    <Col className='m-3'>
-                        <ProductActivity title='Activity Length' value={ [activity.activityLength] } />
-                    </Col>
+                <Col xs={ 12 } xl={ 3 } className='center mb-3'>
+                    <ProductActivity title='Activity Frequency' value={ [activity.activityFrequency] } />
+                </Col>
+                <Col xs={ 12 } xl={ 3 } className='center'>
+                    <ProductActivity title='Activity Length' value={ [activity.activityLength] } />
                 </Col>
             </Row>
         </React.Fragment>

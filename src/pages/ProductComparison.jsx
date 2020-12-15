@@ -125,12 +125,12 @@ export default function ProductComparison(props) {
     useEffect(() => {
         if (clientProducts.length !== 0 && !selectedSKU1 && !selectedSKU2) {
             setSelectedSKU1({
-                label: clientProducts[11].product_info.name,
-                value: clientProducts[11].product_id
+                label: clientProducts[0].product_info.name,
+                value: clientProducts[0].product_id
             });
             setSelectedSKU2({
-                label: clientProducts[2].product_info.name,
-                value: clientProducts[2].product_id
+                label: clientProducts[10].product_info.name,
+                value: clientProducts[10].product_id
             });
             const today = new Date();
             const beforeWeek = moment(today).subtract(6, 'day').toDate();
@@ -142,28 +142,29 @@ export default function ProductComparison(props) {
     return (
         <>
             <Row className='center'>
-                <Col xl='2' className='center'>
+                <Col xs={ 12 } md={ 4 } xl={ 3 } className='center mb-3'>
                     <SelectWrapper title='Channel' data={ channels } selectedOptions={ selectedChannels }
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
-                <Col xl='2' className='center'>
-                    <SelectWrapper title='Retailer' data={ (selectedChannels && selectedChannels.length !== 0)  ? markets.filter(market => {
-                        for (let i = 0; i < selectedChannels.length; i++) {
-                            if (market.channel_id === selectedChannels[i].value)
-                                return true;
-                        }
-                        return false;
-                    }) : markets } selectedOptions={ selectedRetailers }
+                <Col xs={ 12 } md={ 4 } xl={ 3 } className='center mb-3'>
+                    <SelectWrapper title='Retailer'
+                                   data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
+                                       for (let i = 0; i < selectedChannels.length; i++) {
+                                           if (market.channel_id === selectedChannels[i].value)
+                                               return true;
+                                       }
+                                       return false;
+                                   }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
-                <Col xl='2' className='center'>
+                <Col xs={ 12 } md={ 4 } xl={ 3 } className='center mb-3'>
                     <DateWrapper isDataRange={ true } startDate={ startDate } endDate={ endDate }
                                  onDateChange={ onDateChange } />
                 </Col>
             </Row>
 
             <Row className='center mt-4 product-comparison-sticky'>
-                <Col xl='5'>
+                <Col xs={ 12 } md={ 5 } xl={ 5 }>
                     <ProductDescription image={ selectedProduct1 ? selectedProduct1.product_info.imageurl : '' }
                                         name={ selectedProduct1 ? selectedProduct1.product_info.name : '' }
                                         selectTitle='Product 1'
@@ -172,10 +173,10 @@ export default function ProductComparison(props) {
                                         selectedOptions={ selectedSKU1 }
                                         setSelectedOptions={ setSelectedSKU1 } />
                 </Col>
-                <Col xl='1' className='center'>
+                <Col xs={ 12 } md={ 2 } xl={ 1 } className='center'>
                     <i className="mdi mdi-48px mdi-sword-cross" />
                 </Col>
-                <Col xl='5'>
+                <Col xs={ 12 } md={ 5 } xl={ 5 }>
                     <ProductDescription image={ selectedProduct2 ? selectedProduct2.product_info.imageurl : '' }
                                         name={ selectedProduct2 ? selectedProduct2.product_info.name : '' }
                                         selectTitle='Product 2'
@@ -185,42 +186,41 @@ export default function ProductComparison(props) {
                                         setSelectedOptions={ setSelectedSKU2 } />
                 </Col>
             </Row>
-
             <Row className='center my-5 h-100'>
-                <Col xl='3'>
+                <Col xs={ 12 } md={ 6 } xl={ 3 } className='mb-4 order-sm-0 order-xl-0'>
                     <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
                                   value={ selectedProduct1 ? selectedProduct1.minimumMarket + ' - ' +
                                       selectedProduct1.minimumPrice : 'Please select a product' } />
                 </Col>
-                <Col xl='2' className="text-center">
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className="text-center mb-4 order-sm-2 order-xl-1">
                     <ProductActivity title='Availability'
                                      value={ selectedProduct1 ? [selectedProduct1.availability] : [0] } />
                 </Col>
-                <Col xl='1' />
-                <Col xl='3'>
+                <Col xs={ 0 } md={ 0 } xl={ 1 } className='order-sm-4 order-xl-2' />
+                <Col xs={ 12 } md={ 6 } xl={ 3 } className='mb-4 order-sm-1 order-xl-3'>
                     <MinimumPrice icon='mdi-tag-text-outline' title='Minimum Price'
                                   value={ selectedProduct2 ? selectedProduct2.minimumMarket + ' - ' +
                                       selectedProduct2.minimumPrice : 'Please select a product' } />
                 </Col>
-                <Col xl='2' className="text-center">
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className="text-center mb-4 order-sm-3 order-xl-4">
                     <ProductActivity title='Availability'
                                      value={ selectedProduct2 ? [selectedProduct2.availability] : [0] } />
                 </Col>
             </Row>
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <CurrentPricingComparison selectedProduct1={ selectedProduct1 }
                                               selectedProduct2={ selectedProduct2 }
-                                              selectedRetailers={ selectedRetailers }/>
+                                              selectedRetailers={ selectedRetailers } />
                 </Col>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <ChartDescription />
                 </Col>
             </Row>
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <DateRangeComparison selectedProduct1={ selectedProduct1 }
                                          selectedProduct2={ selectedProduct2 }
                                          selectedRetailers={ selectedRetailers }
@@ -229,43 +229,43 @@ export default function ProductComparison(props) {
                                          startDate={ startDate }
                                          endDate={ endDate } />
                 </Col>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <ChartDescription />
                 </Col>
             </Row>
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <YTDPricingComparison selectedProduct1={ selectedProduct1 }
                                           selectedProduct2={ selectedProduct2 }
-                                          selectedRetailers={ selectedRetailers }/>
+                                          selectedRetailers={ selectedRetailers } />
                 </Col>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <ChartDescription />
                 </Col>
             </Row>
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <DateRangeParityComparison selectedProduct1={ selectedProduct1 }
                                                selectedProduct2={ selectedProduct2 }
                                                selectedRetailers={ selectedRetailers }
                                                startDate={ startDate }
                                                endDate={ endDate } />
                 </Col>
-                <Col lg={ 5 }>
+                <Col xs={ 12 } xl={ 5 }>
                     <ChartDescription />
                 </Col>
             </Row>
 
             <Row className='d-flex align-items-center justify-content-around my-5 h-100'>
-                <Col lg='2'>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className="order-sm-0 order-xl-0">
                     <ProductActivity title='Activity Frequency' value={ [activity1.activityFrequency] } />
                 </Col>
-                <Col lg='5'>
+                <Col xs={ 12 } md={ 12 } xl={ 5 } className="order-sm-2 order-xl-1">
                     <ChartDescription />
                 </Col>
-                <Col lg='2'>
+                <Col xs={ 12 } md={ 6 } xl={ 2 } className="order-sm-1 order-xl-2">
                     <ProductActivity title='Activity Frequency' value={ [activity2.activityFrequency] } />
                 </Col>
             </Row>

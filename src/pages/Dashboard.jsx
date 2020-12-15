@@ -40,19 +40,19 @@ export default function Dashboard(props) {
                           value={ ((numberOfRetailers / markets.length) * 100).toFixed(2) + '%' } />
             </Row>
             <Row className='mb-4'>
-                <Col xl="3">
+                <Col xs={ 12 } md={ 6 } xl={ 3 } className='order-xl-0'>
                     <NewsFeed />
                 </Col>
-                <Col lg="6">
+                <Col xs={ 12 } md={ 12 } xl={ 6 } className='order-sm-first order-xl-1'>
                     <ProductsWeekly />
                 </Col>
-                <Col xl="3">
+                <Col xs={ 12 } md={ 6 } xl={ 3 } className='order-xl-2'>
                     <MarketteNewsFeed />
                 </Col>
             </Row>
 
             <Row className='mb-5'>
-                <Col>
+                <Col xs={ 12 } md={ 6 } xl={ 4 } className='mb-5'>
                     <Row>
                         <Col>
                             <MarketAvailability />
@@ -63,10 +63,10 @@ export default function Dashboard(props) {
                             {/*<Insert />*/ }
                         </Col></Row>
                 </Col>
-                <Col>
+                <Col xs={ 12 } md={ 6 } xl={ 4 } className='mb-5'>
                     <SavedFilters />
                 </Col>
-                <Col>
+                <Col xs={ 12 } md={ 12 } xl={ 4 } className='mb-5'>
                     <LastViewedProducts />
                 </Col>
             </Row>
