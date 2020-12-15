@@ -4,7 +4,7 @@ import { Card, CardBody } from "reactstrap";
 export default function SavedFilters() {
     return (
         <React.Fragment>
-            <Card className='h-100'>
+            <Card className="h-100">
                 <CardBody>
                     <h4 className="card-title mb-3">Saved Filters</h4>
                     <div className="inbox-wid center h-100">

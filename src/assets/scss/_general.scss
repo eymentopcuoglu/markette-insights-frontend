@@ -24,10 +24,14 @@
   overflow-wrap: normal
 }
 
-.h-85px {
-  max-height: 85px;
+.h-85 {
+  height: 85%;
 }
 
 .react-datepicker-popper {
   z-index: 2;
+}
+
+.react-datepicker-wrapper {
+  width: 100%;
 }

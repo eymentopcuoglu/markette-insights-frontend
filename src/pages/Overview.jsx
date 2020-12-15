@@ -21,7 +21,18 @@ export default function Overview(props) {
 
     const dispatch = useDispatch();
     const centerClass = 'd-flex justify-content-center align-items-center';
-    const { numberOfProducts, numberOfRetailers, averageStandardDeviation, categories, subCategories, brands, subBrands, markets, channels, clientProducts } = useSelector(state => state.data);
+    const {
+        numberOfProducts,
+        numberOfRetailers,
+        averageStandardDeviation,
+        categories,
+        subCategories,
+        brands,
+        subBrands,
+        markets,
+        channels,
+        clientProducts
+    } = useSelector(state => state.data);
 
     //Select filters
     const [selectedCategories, setSelectedCategories] = useState(null);
@@ -144,22 +155,22 @@ export default function Overview(props) {
             </Row>
 
             <Row className='d-flex align-items-center'>
-                <Col xl='3' className={ centerClass }>
+                <Col xs={ 0 } md={ 0 } xl={ 3 } className='center'>
                     {/*<DateWrapper isDataRange={ false } startDate={ date } onDateChange={ setDate } />*/ }
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Category' data={ categories } selectedOptions={ selectedCategories }
                                    setSelectedOptions={ setSelectedCategories } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Brand' data={ brands } selectedOptions={ selectedBrands }
                                    setSelectedOptions={ setSelectedBrands } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Channel' data={ channels } selectedOptions={ selectedChannels }
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Size' data={ [{ name: 'AVAILABLE VERY SOON!' }] }
                                    selectedOptions={ selectedSizes } setSelectedOptions={ setSelectedSizes } />
                 </Col>
@@ -167,10 +178,10 @@ export default function Overview(props) {
 
 
             <Row className='d-flex align-items-center mt-2'>
-                <Col xl='3'>
+                <Col xs={ 12 } xl={ 3 }>
                     <SearchBar value={ search } handleChange={ handleSearchBar } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Sub Category'
                                    data={ (selectedCategories && selectedCategories.length !== 0) ? subCategories.filter(subCategory => {
                                        for (let i = 0; i < selectedCategories.length; i++) {
@@ -182,7 +193,7 @@ export default function Overview(props) {
                                    selectedOptions={ selectedSubCategories }
                                    setSelectedOptions={ setSelectedSubCategories } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Sub Brand'
                                    data={ (selectedBrands && selectedBrands.length !== 0) ? subBrands.filter(subBrand => {
                                        for (let i = 0; i < selectedBrands.length; i++) {
@@ -193,7 +204,7 @@ export default function Overview(props) {
                                    }) : subBrands } selectedOptions={ selectedSubBrands }
                                    setSelectedOptions={ setSelectedSubBrands } />
                 </Col>
-                <Col className='center'>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Retailer'
                                    data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
                                        for (let i = 0; i < selectedChannels.length; i++) {
@@ -204,7 +215,7 @@ export default function Overview(props) {
                                    }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
-                <Col className={ centerClass }>
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='SKU' data={ selectSKUData }
                                    selectedOptions={ selectedSKUs } setSelectedOptions={ setSelectedSKUs } />
                 </Col>
@@ -212,9 +223,9 @@ export default function Overview(props) {
 
             <PerfectScrollbar className='overflow-inherit'>
 
-                <Row className='mt-5 mb-3 table-column-titles'>
+                <Row className='mt-5 mb-3 table-column-titles no-wrap'>
 
-                    <Col xl="3" className='w-100'>
+                    <Col xs={ 3 } className='w-100'>
                         <Card className="text-white bg-primary w-100 h-75">
                             <CardBody className='center'>
                                 <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Products</p>
@@ -222,26 +233,29 @@ export default function Overview(props) {
                         </Card>
                     </Col>
 
-                    <Col xl="3">
-                        <Row>
-                            <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background h-75">
+                    <Col xs={ 4 }>
+                        <Row className='no-wrap'>
+                            <Col xs={ 4 }>
+                                <Card
+                                    className="text-white calculated-fields-title-background h-75 ">
                                     <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Minimum
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background h-75">
+                            <Col xs={ 4 }>
+                                <Card
+                                    className="text-white calculated-fields-title-background h-75">
                                     <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Average
                                             Price</p>
                                     </CardBody>
                                 </Card>
                             </Col>
-                            <Col xl="4">
-                                <Card className="text-white calculated-fields-title-background h-75">
+                            <Col xs={ 4 }>
+                                <Card
+                                    className="text-white calculated-fields-title-background h-75 ">
                                     <CardBody className='center'>
                                         <p className='font-size-17 text-center m-auto overflow-wrap-normal'>Standard
                                             Deviation</p>
@@ -251,11 +265,11 @@ export default function Overview(props) {
                         </Row>
                     </Col>
 
-                    <Col xl="6">
-                        <Row className='retailers h-100'>
+                    <Col xs={ 5 }>
+                        <Row className='retailers h-100 no-wrap'>
                             { selectedRetailers ? selectedRetailers.map((retailer, key) => (
-                                <Col key={ key } xl="3">
-                                    <Card className="text-white bg-primary w-100 h-75">
+                                <Col key={ key } xs={ 3 }>
+                                    <Card className="text-white bg-primary w-100 h-75 ">
                                         <CardBody className='center'>
                                             <p className='font-size-17 text-center m-auto overflow-wrap-normal'>{ retailer.label }</p>
                                         </CardBody>

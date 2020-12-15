@@ -5,7 +5,7 @@ import SelectWrapper from "../SelectWrapper";
 
 export default function ProductDescription(props) {
     return (
-        <Card className={ 'margin-bottom-inherit ' + (props.isInComparison ? 'product-description' : '') }>
+        <Card className={ 'margin-bottom-inherit h-100 ' + (props.isInComparison ? 'product-description' : '') }>
             <CardBody>
                 <Row>
                     <Col xl='4' className='center'>

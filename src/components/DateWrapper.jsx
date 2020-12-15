@@ -7,7 +7,7 @@ export default function DateWrapper(props) {
     return (
         <FormGroup className="mb-0 w-100">
             <Label className="control-label">Date</Label>
-            <InputGroup>
+            <InputGroup className='flex-nowrap'>
                 { props.isDataRange ?
                     <DatePicker
                         selected={ props.startDate }
