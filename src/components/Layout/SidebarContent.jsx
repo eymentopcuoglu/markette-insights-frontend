@@ -81,11 +81,12 @@ export default function SidebarContent(props) {
                             <i className="mdi mdi-google-analytics" />
                             <span>Product Analysis</span>
                         </Link>
+                    </li>
+                    <li>
                         <Link to="/product-comparison" className=" waves-effect">
                             <i className="mdi mdi-compare" />
                             <span>Product Comparison</span>
                         </Link>
-
                     </li>
                 </ul>
             </div>
