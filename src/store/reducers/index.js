@@ -5,6 +5,7 @@ import breadcrumbReducer from './breadcrumb/index';
 import layoutReducer from "./layout/index";
 import dataReducer from './data/index';
 import filterReducer from "./filter/index";
+import overviewReducer from './overview/index';
 
 export default combineReducers({
     auth: authReducer,
@@ -12,5 +13,6 @@ export default combineReducers({
     breadcrumb: breadcrumbReducer,
     layout: layoutReducer,
     data: dataReducer,
-    filter: filterReducer
+    filter: filterReducer,
+    overview: overviewReducer
 });

@@ -1,13 +1,19 @@
 import moment from "moment";
 
-export function getMinimumPrice(product, selectedRetailers) {
-    if (product.current_product_transactions.length === 0) {
+//If 'current_product_transactions' should be used, 0 flag should be supplied. If 'product_transactions' should be used, 1 flag should be supplied.
+export function getMinimumPrice(product, selectedRetailers, flag) {
+    let pricing;
+    if (flag === 0)
+        pricing = product.current_product_transactions;
+    else
+        pricing = product.product_transactions;
+    if (pricing.length === 0) {
         return null
     }
 
     let temp;
     let isAvailable = false;
-    const currentPricing = product.current_product_transactions;
+    const currentPricing = pricing;
 
     if (selectedRetailers) {
         //Check whether the item is available in some of the selected retailers
@@ -20,14 +26,14 @@ export function getMinimumPrice(product, selectedRetailers) {
     }
     if (selectedRetailers && isAvailable) {
         //Filter by selected markets and convert current_product_transactions to have only pricen field
-        temp = product.current_product_transactions
+        temp = pricing
             .filter(item => selectedRetailers.some(retailer => retailer.value === parseInt(item.market)))
             .map(item => parseInt(item.pricen));
     } else {
-        temp = product.current_product_transactions.map(item => parseInt(item.pricen));
+        temp = pricing.map(item => parseInt(item.pricen));
     }
     //Get the index of minimum pricen
-    const indexOfMinItem = product.current_product_transactions.findIndex(item => parseInt(item.pricen) === Math.min(...temp));
+    const indexOfMinItem = pricing.findIndex(item => parseInt(item.pricen) === Math.min(...temp));
     if (indexOfMinItem < 0) {
         console.log('THERE IS A PROBLEM!, indexOfMinItem:', indexOfMinItem);
         console.log('product.current_product_transactions: ', product.current_product_transactions);
@@ -35,18 +41,23 @@ export function getMinimumPrice(product, selectedRetailers) {
         console.log('temp:', temp);
     }
     return {
-        minimumPrice: product.current_product_transactions[indexOfMinItem].pricen,
-        minimumMarket: product.current_product_transactions[indexOfMinItem].market
+        minimumPrice: pricing[indexOfMinItem].pricen,
+        minimumMarket: pricing[indexOfMinItem].market
     }
 }
 
-export function getAveragePrice(product, selectedRetailers) {
-    if (product.current_product_transactions.length === 0) {
+export function getAveragePrice(product, selectedRetailers, flag) {
+    let pricing;
+    if (flag === 0)
+        pricing = product.current_product_transactions;
+    else
+        pricing = product.product_transactions;
+    if (pricing.length === 0) {
         return null
     }
     let temp;
     let isAvailable = false;
-    const currentPricing = product.current_product_transactions;
+    const currentPricing = pricing;
 
     if (selectedRetailers) {
         //Check whether the item is available in some of the selected retailers
@@ -59,11 +70,11 @@ export function getAveragePrice(product, selectedRetailers) {
     }
     if (selectedRetailers && isAvailable) {
         //Filter by selected markets and convert current_product_transactions to have only pricen field
-        temp = product.current_product_transactions
+        temp = pricing
             .filter(item => selectedRetailers.some(retailer => retailer.value === parseInt(item.market)))
             .map(item => parseInt(item.pricen));
     } else {
-        temp = product.current_product_transactions.map(item => parseInt(item.pricen));
+        temp = pricing.map(item => parseInt(item.pricen));
     }
     const total = temp.reduce((acc, c) => acc + c, 0);
     return (total / temp.length / 100).toFixed(2);
@@ -74,13 +85,18 @@ export function getMean(products) {
     return products.reduce((acc, product) => (acc += product)) / products.length;
 }
 
-export function getStandardDeviation(product, selectedRetailers) {
-    if (product.current_product_transactions.length === 0) {
+export function getStandardDeviation(product, selectedRetailers, flag) {
+    let pricing;
+    if (flag === 0)
+        pricing = product.current_product_transactions;
+    else
+        pricing = product.product_transactions;
+    if (pricing.length === 0) {
         return null
     }
     let temp;
     let isAvailable = false;
-    const currentPricing = product.current_product_transactions;
+    const currentPricing = pricing;
 
     if (selectedRetailers) {
         //Check whether the item is available in some of the selected retailers
@@ -93,11 +109,11 @@ export function getStandardDeviation(product, selectedRetailers) {
     }
     if (selectedRetailers && isAvailable) {
         //Filter by selected markets and convert current_product_transactions to have only pricen field
-        temp = product.current_product_transactions
+        temp = pricing
             .filter(item => selectedRetailers.some(retailer => retailer.value === parseInt(item.market)))
             .map(item => parseInt(item.pricen));
     } else {
-        temp = product.current_product_transactions.map(item => parseInt(item.pricen));
+        temp = pricing.map(item => parseInt(item.pricen));
     }
 
     const mean = getMean(temp);

@@ -57,7 +57,7 @@ export default function YTDPricingComparisonChart(props) {
 
     useEffect(() => {
         if (props.selectedProduct1 && props.selectedProduct2) {
-            const start = moment(new Date()).startOf('year').toDate();
+            const start = moment(new Date()).subtract(12, 'month').startOf('year').toDate();
             const end = new Date();
             const getData = async () => {
                 const productData1 = await api.productAnalysis.productAnalysisFetch(props.selectedProduct1.product_id, start, end);
@@ -105,7 +105,7 @@ export default function YTDPricingComparisonChart(props) {
             }
             getData();
         }
-    }, [props.selectedProduct1, props.selectedProduct2,props.selectedRetailers]);
+    }, [props.selectedProduct1, props.selectedProduct2, props.selectedRetailers]);
 
     return (
         <ReactApexChart options={ state.options } series={ state.series } type="bar" height="350" />

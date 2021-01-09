@@ -22,7 +22,7 @@ export default function DateWrapper(props) {
                     <DatePicker
                         selected={ props.startDate }
                         onChange={ date => props.onDateChange(date) }
-                        className='form-control'
+                        className='form-control mb-0'
                         minDate={ new Date('2020-10-22') }
                         maxDate={ new Date() }
                     />

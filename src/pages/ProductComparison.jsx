@@ -81,7 +81,7 @@ export default function ProductComparison(props) {
                     availability: 0
                 });
             } else {
-                const minimumPricing = getMinimumPrice(product);
+                const minimumPricing = getMinimumPrice(product, null, 0);
                 const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
                 const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
                 const availability = getAvailability(product, markets);
@@ -107,7 +107,7 @@ export default function ProductComparison(props) {
                     availability: 0
                 });
             } else {
-                const minimumPricing = getMinimumPrice(product);
+                const minimumPricing = getMinimumPrice(product, null, 0);
                 const minimumPrice = (minimumPricing.minimumPrice / 100) + '₺';
                 const minimumMarket = getMarketName(minimumPricing.minimumMarket, markets);
                 const availability = getAvailability(product, markets);

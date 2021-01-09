@@ -57,8 +57,8 @@ export default function ProductRow(props) {
                             <Col key={ key } xs={ 3 } className='w-100 h-100'>
                                 <Card className="text-white bg-white h-75 w-100 ">
                                     <CardBody className='center'>
-                                        <p className='font-size-16 text-center text-black-50 margin-bottom-inherit'>{ props.product.current_product_transactions.find(item => parseInt(item.market) === retailer.value) ?
-                                            ((props.product.current_product_transactions.find(item => parseInt(item.market) === retailer.value).pricen) / 100) + '₺' : 'Out of stock' }</p>
+                                        <p className='font-size-16 text-center text-black-50 margin-bottom-inherit'>{ props.pricing.find(item => parseInt(item.market) === retailer.value) ?
+                                            ((props.pricing.find(item => parseInt(item.market) === retailer.value).pricen) / 100) + '₺' : 'Out of stock' }</p>
                                     </CardBody>
                                 </Card>
                             </Col>
