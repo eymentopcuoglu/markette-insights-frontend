@@ -7,7 +7,7 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 
 import actions from "../store/actions/index";
 import { getMinimumPrice, getAveragePrice, getStandardDeviation } from '../utils/pricingUtil';
-import { getCategoryId } from '../utils/namingUtil';
+import { getCategoryId, getMarketName } from '../utils/namingUtil';
 
 //Import Components
 import MiniCard from '../components/MiniCard';
@@ -15,12 +15,13 @@ import DateWrapper from "../components/DateWrapper";
 import SelectWrapper from "../components/SelectWrapper";
 import SearchBar from "../components/SearchBar";
 import ProductRow from "../components/Overview/ProductRow";
+import { compareDates } from "../utils/dateUtil";
+import ExportToExcelButton from "../components/Overview/ExportToExcelButton";
 
 export default function Overview(props) {
 
 
     const dispatch = useDispatch();
-    const centerClass = 'd-flex justify-content-center align-items-center';
     const {
         numberOfProducts,
         numberOfRetailers,
@@ -34,6 +35,10 @@ export default function Overview(props) {
         clientProducts
     } = useSelector(state => state.data);
 
+    const { clientProducts: productPricingData, isLoading } = useSelector(state => state.overview);
+
+    const { user } = useSelector(state => state.auth);
+
     //Select filters
     const [selectedCategories, setSelectedCategories] = useState(null);
     const [selectedBrands, setSelectedBrands] = useState(null);
@@ -45,8 +50,11 @@ export default function Overview(props) {
     const [selectedSKUs, setSelectedSKUs] = useState(null);
 
     const [selectSKUData, setSelectSKUData] = useState(null);
+
     const [shownData, setShownData] = useState(null);
 
+    //Set it to true if the date has been changed, set it to false after the data is fetched and ready
+    const [dateChange, setDateChange] = useState(false);
 
     //Date Filter
     const [date, setDate] = useState(new Date());
@@ -64,6 +72,15 @@ export default function Overview(props) {
     const handleSearchBar = (e) => {
         setSearch(e.target.value);
     }
+
+    //Date Wrapper change handler
+    const onDateChange = newDate => {
+        if (!compareDates(new Date(), newDate)) {
+            dispatch(actions.overview.overviewDataFetchRequest(user.clientId, newDate));
+        }
+        setDateChange(true);
+        setDate(newDate);
+    };
 
     useEffect(() => {
         dispatch(actions.breadcrumb.setBreadcrumbItems("Overview", state.breadcrumbItems));
@@ -102,7 +119,13 @@ export default function Overview(props) {
     //Filter the data
     useEffect(() => {
         if (clientProducts) {
-            let temp = clientProducts;
+            let temp;
+            //Check whether the date is today or not
+            if (compareDates(new Date(), date)) {
+                temp = clientProducts;
+            } else {
+                temp = productPricingData;
+            }
             const isSelectedSubCategory = selectedSubCategories && selectedSubCategories.length !== 0;
             const isSelectedSubBrand = selectedSubBrands && selectedSubBrands.length !== 0;
             const isSelectedCategory = selectedCategories && selectedCategories.length !== 0;
@@ -120,31 +143,46 @@ export default function Overview(props) {
             if (isSelectedBrand && !isSelectedSubBrand) {
                 temp = temp.filter(product => selectedBrands.some(brand => brand.value === product.product_info.brand_id));
             }
+            let selectSKUData = [...temp];
+
+            //Search filter
+            temp = temp.filter(product => product.product_info.name.toLowerCase().indexOf(search) !== -1);
+            //SelectedSKU filter
+            temp = temp.filter(product => {
+                if (selectedSKUs && selectedSKUs.length !== 0) {
+                    return selectedSKUs.some(sku => sku.value === product.product_id);
+                } else
+                    return true;
+            });
             setShownData(temp);
-            temp = temp.map(item => ({
+            setDateChange(false);
+            selectSKUData = selectSKUData.map(item => ({
                 name: item.product_info.name,
                 id: item.product_id
             }));
-            setSelectSKUData(temp);
+            setSelectSKUData(selectSKUData);
         }
-    }, [selectedCategories, selectedSubCategories, selectedBrands, selectedSubBrands, selectedSizes]);
+    }, [productPricingData, date, selectedCategories, selectedSubCategories, selectedBrands, selectedSubBrands, selectedSizes, search, selectedSKUs]);
 
 
     useEffect(() => {
         if (markets && clientProducts) {
             const data = markets.filter(market => {
-                return clientProducts.some(product => product.current_product_transactions.some(item => parseInt(item.market) === market.id));
+                if (compareDates(new Date(), date)) {
+                    return clientProducts.some(product => product.current_product_transactions.some(item => parseInt(item.market) === market.id));
+                } else {
+                    return productPricingData.some(product => product.product_transactions.some(item => parseInt(item.market) === market.id));
+                }
             }).map(item => ({
                 label: item.name,
                 value: item.id
             }));
             setSelectedRetailers(data);
         }
-    }, [markets, selectedSizes, selectedSubCategories, selectedSubBrands, selectedSKUs]);
+    }, [productPricingData, date, markets, selectedSizes, selectedSubCategories, selectedSubBrands, selectedSKUs]);
 
     return (
         <React.Fragment>
-
             <Row>
                 <MiniCard icon='mdi-cube-outline' title='Number of Products' value={ numberOfProducts } />
                 <MiniCard icon='mdi-buffer' title='Number of Retailers' value={ numberOfRetailers } />
@@ -155,8 +193,16 @@ export default function Overview(props) {
             </Row>
 
             <Row className='d-flex align-items-center'>
-                <Col xs={ 0 } md={ 0 } xl={ 3 } className='center'>
-                    {/*<DateWrapper isDataRange={ false } startDate={ date } onDateChange={ setDate } />*/ }
+                <Col xs={ 12 } xl={ 3 }>
+                    <Row className='d-flex justify-content-center align-items-end'>
+                        <Col className='center'>
+                            <DateWrapper isDataRange={ false } startDate={ date } onDateChange={ onDateChange } />
+                        </Col>
+                        <Col className='center'>
+                            <ExportToExcelButton data={ shownData } date={ date }
+                                                 selectedRetailers={ selectedRetailers } />
+                        </Col>
+                    </Row>
                 </Col>
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Category' data={ categories } selectedOptions={ selectedCategories }
@@ -280,29 +326,27 @@ export default function Overview(props) {
                         </Row>
                     </Col>
                 </Row>
-                { shownData && shownData
-                    //Search filter
-                    .filter(product => product.product_info.name.toLowerCase().indexOf(search) !== -1)
-
-                    .filter(product => {
-                        if (selectedSKUs && selectedSKUs.length !== 0) {
-                            return selectedSKUs.some(sku => sku.value === product.product_id);
-                        } else
-                            return true;
-                    })
-
+                { !isLoading && !dateChange && shownData && shownData
                     .map((product, key) => {
-                        const minimumPrice = getMinimumPrice(product, selectedRetailers);
-                        const averagePrice = getAveragePrice(product, selectedRetailers);
-                        const standardDeviation = getStandardDeviation(product, selectedRetailers);
+                        let minimumPrice, averagePrice, standardDeviation;
+                        const isToday = compareDates(new Date(), date);
+                        if (isToday) {
+                            minimumPrice = getMinimumPrice(product, selectedRetailers, 0);
+                            averagePrice = getAveragePrice(product, selectedRetailers, 0);
+                            standardDeviation = getStandardDeviation(product, selectedRetailers, 0);
+                        } else {
+                            minimumPrice = getMinimumPrice(product, selectedRetailers, 1);
+                            averagePrice = getAveragePrice(product, selectedRetailers, 1);
+                            standardDeviation = getStandardDeviation(product, selectedRetailers, 1);
+                        }
                         return (
                             <ProductRow key={ key }
                                         name={ product.product_info.name } image={ product.product_info.imageurl }
-                                        minimumPrice={ minimumPrice && ('' + (minimumPrice.minimumPrice / 100) + '₺ ' + markets[minimumPrice.minimumMarket - 1].name) }
+                                        minimumPrice={ minimumPrice && ('' + (minimumPrice.minimumPrice / 100) + '₺ ' + getMarketName(minimumPrice.minimumMarket, markets)) }
                                         averagePrice={ averagePrice && (averagePrice + '₺') }
                                         standardDeviation={ standardDeviation && standardDeviation }
                                         retailers={ selectedRetailers }
-                                        product={ product }
+                                        pricing={ isToday ? product.current_product_transactions : product.product_transactions }
                             />
                         );
                     }) }

@@ -12,6 +12,7 @@ export default function Layout(props) {
     const location = useLocation();
     const loading1 = useSelector(state => state.auth.isLoading);
     const loading2 = useSelector(state => state.data.isLoading);
+    const loading3 = useSelector(state => state.overview.isLoading);
 
     const capitalizeFirstLetter = string => {
         return string.charAt(1).toUpperCase() + string.slice(2);
@@ -19,7 +20,7 @@ export default function Layout(props) {
 
     //Loading Screen
     useEffect(() => {
-        if (loading1 || loading2) {
+        if (loading1 || loading2 || loading3) {
             document.getElementById('preloader').style.display = "block";
             document.getElementById('status').style.display = "block";
         } else {

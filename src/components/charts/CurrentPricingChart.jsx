@@ -22,7 +22,7 @@ export default function CurrentPricingChart(props) {
                     data: [parseInt(item.pricen) / 100]
                 }))
             );
-            const average = getAveragePrice(filteredData);
+            const average = getAveragePrice(filteredData, null, 0);
             setState({
                 ...state,
                 options: {
