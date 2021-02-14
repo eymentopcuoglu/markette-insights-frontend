@@ -1,5 +1,5 @@
 async function insertTrackingFetch(startDate, endDate, channels, retailers, suppliers, categories, brands) {
-    let url = 'http://localhost:8000/application/insert-tracking?startDate=' + startDate.toISOString() + '&endDate=' + endDate.toISOString();
+    let url = 'https://api.markette-insights.com/application/insert-tracking?startDate=' + startDate.toISOString() + '&endDate=' + endDate.toISOString();
     if (channels && channels.length !== 0)
         url = url + '&channels=' + channels.join();
     if (retailers && retailers.length !== 0)
