@@ -132,13 +132,13 @@ export default function Overview(props) {
             const isSelectedBrand = selectedBrands && selectedBrands.length !== 0;
 
             if (isSelectedSubCategory) {
-                temp = temp.filter(product => selectedSubCategories.some(subCategory => subCategory.value === product.category_id));
+                temp = temp.filter(product => selectedSubCategories.some(subCategory => subCategory.value === product.product_info.sub_category_id));
             }
             if (isSelectedSubBrand) {
-                temp = temp.filter(product => selectedSubBrands.some(subBrand => subBrand.value === product.sub_brand_id));
+                temp = temp.filter(product => selectedSubBrands.some(subBrand => subBrand.value === product.product_info.sub_brand_id));
             }
             if (isSelectedCategory && !isSelectedSubCategory) {
-                temp = temp.filter(product => selectedCategories.some(category => category.value === getCategoryId(subCategories, product.category_id)));
+                temp = temp.filter(product => selectedCategories.some(category => category.value === product.product_info.category_id));
             }
             if (isSelectedBrand && !isSelectedSubBrand) {
                 temp = temp.filter(product => selectedBrands.some(brand => brand.value === product.product_info.brand_id));

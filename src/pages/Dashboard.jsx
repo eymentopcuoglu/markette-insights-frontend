@@ -60,7 +60,7 @@ export default function Dashboard(props) {
                     </Row>
                     <Row>
                         <Col className='d-flex justify-content-center'>
-                            {/*<Insert />*/ }
+                            {/*<InsertTracking />*/ }
                         </Col></Row>
                 </Col>
                 <Col xs={ 12 } md={ 6 } xl={ 4 } className='mb-5'>

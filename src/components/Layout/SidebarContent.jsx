@@ -62,18 +62,22 @@ export default function SidebarContent(props) {
 
                 <ul className="metismenu list-unstyled" id="side-menu">
                     <li className="menu-title">Main</li>
-
                     <li>
                         <Link to="/dashboard" className="waves-effect">
                             <i className="mdi mdi-view-dashboard" />
                             <span>Dashboard</span>
                         </Link>
                     </li>
-
                     <li>
                         <Link to="/overview" className=" waves-effect">
                             <i className="mdi mdi-eye" />
                             <span>Overview</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <Link to="/insert-tracking" className=" waves-effect">
+                            <i className="mdi mdi-book-information-variant" />
+                            <span>Insert Tracking</span>
                         </Link>
                     </li>
                     <li>

@@ -13,14 +13,18 @@ export default function MarketteNewsFeed() {
                     <ol className="activity-feed mb-0">
                         <li className="feed-item">
                             <div className="feed-item-list">
+                                <span className="date">Feb 14</span>
+                                <span className="activity-text">Version 0.6.0 is out!</span>
+                            </div>
+                        </li>
+                        <li className="feed-item">
+                            <div className="feed-item-list">
                                 <span className="date">Nov 4</span>
                                 <span className="activity-text">Version 0.1.0 is out!</span>
                             </div>
                         </li>
                     </ol>
                 </PerfectScrollbar>
-
-
             </CardBody>
         </Card>
     );
