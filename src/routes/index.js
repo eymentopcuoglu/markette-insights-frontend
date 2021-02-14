@@ -12,6 +12,7 @@ import Dashboard from '../pages/Dashboard';
 import Overview from "../pages/Overview";
 import ProductAnalysis from "../pages/ProductAnalysis";
 import ProductComparison from "../pages/ProductComparison";
+import InsertTracking from "../pages/InsertTracking";
 
 // import Pages404 from "../pages/Extra Pages/pages-404";
 // import Pages500 from "../pages/Extra Pages/pages-500";
@@ -22,9 +23,9 @@ import ProductComparison from "../pages/ProductComparison";
 const authProtectedRoutes = [
     { path: "/dashboard", component: Dashboard },
     { path: "/overview", component: Overview },
+    { path: '/insert-tracking', component: InsertTracking },
     { path: "/product-analysis", component: ProductAnalysis },
     { path: "/product-comparison", component: ProductComparison },
-
     { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> }
 ];
 
