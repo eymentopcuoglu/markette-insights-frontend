@@ -1,5 +1,7 @@
+import { API_URL } from "../constants";
+
 async function productAnalysisFetch(product_id, startDate, endDate) {
-    const response = await fetch('http://localhost:8000/application/product-analysis/' + product_id + '/' + startDate.toISOString() + '/' + endDate.toISOString(), {
+    const response = await fetch(API_URL + '/application/product-analysis/' + product_id + '/' + startDate.toISOString() + '/' + endDate.toISOString(), {
         method: 'GET',
         credentials: 'include',
     });

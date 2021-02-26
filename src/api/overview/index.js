@@ -1,5 +1,7 @@
+import { API_URL } from "../constants";
+
 async function fetchPricingWithDate(clientId, date) {
-    const response = await fetch('http://localhost:8000/application/overview?client=' + clientId + '&date=' + date.toISOString(), {
+    const response = await fetch(API_URL + '/application/overview?client=' + clientId + '&date=' + date.toISOString(), {
         method: 'GET',
         credentials: 'include',
     });
