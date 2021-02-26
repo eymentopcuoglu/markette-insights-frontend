@@ -9,7 +9,7 @@ export default function Footer() {
                     <Row>
                         <Col sm="12">
                             © { new Date().getFullYear() } Markette <span
-                            className="d-none d-sm-inline-block"> - v0.6.1 </span>
+                            className="d-none d-sm-inline-block"> - v0.7.0 </span>
                         </Col>
                     </Row>
                 </Container>
