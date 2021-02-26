@@ -129,8 +129,8 @@ export default function ProductComparison(props) {
                 value: clientProducts[0].product_id
             });
             setSelectedSKU2({
-                label: clientProducts[10].product_info.name,
-                value: clientProducts[10].product_id
+                label: clientProducts[8].product_info.name,
+                value: clientProducts[8].product_id
             });
             const today = new Date();
             const beforeWeek = moment(today).subtract(6, 'day').toDate();
