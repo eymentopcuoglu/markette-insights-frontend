@@ -22,12 +22,11 @@ export default function MarketAvailability() {
                     },
                     dataLabels: {
                         name: {
-                            fontFamily: 'Poppins',
-                            fontSize: "24px",
+                            show: false
                         },
                         value: {
                             color: "#5b626b",
-                            fontSize: "26px",
+                            fontSize: "32px",
                             fontFamily: 'Poppins',
                             fontWeight: 500
                         }
@@ -46,8 +45,7 @@ export default function MarketAvailability() {
                             },
                             dataLabels: {
                                 name: {
-                                    fontFamily: 'Poppins',
-                                    fontSize: "20px",
+                                    show: false
                                 },
                                 value: {
                                     color: "#5b626b",
