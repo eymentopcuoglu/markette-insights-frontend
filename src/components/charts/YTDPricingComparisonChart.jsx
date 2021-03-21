@@ -47,7 +47,7 @@ export default function YTDPricingComparisonChart(props) {
             yaxis: {
                 labels: {
                     formatter: function (value) {
-                        return value.toFixed(2) + "₺";
+                        return value + "₺";
                     }
                 },
             },
@@ -57,39 +57,19 @@ export default function YTDPricingComparisonChart(props) {
 
     useEffect(() => {
         if (props.selectedProduct1 && props.selectedProduct2) {
-            const start = moment(new Date()).subtract(12, 'month').startOf('year').toDate();
-            const end = new Date();
+            // const start = moment(new Date()).subtract(12, 'month').startOf('year').toDate();
+            // const end = new Date();
             const getData = async () => {
-                const productData1 = await api.productAnalysis.productAnalysisFetch(props.selectedProduct1.product_id, start, end);
-                const productData2 = await api.productAnalysis.productAnalysisFetch(props.selectedProduct2.product_id, start, end);
+                const data = await api.productComparison.productComparisonFetch(props.selectedProduct1.product_id, props.selectedProduct2.product_id, props.selectedRetailers && props.selectedRetailers.map(e => e.value));
 
-                //Retailer based filtering
-                let filteredProductData1 = [...productData1];
-                if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
-                    filteredProductData1 = filteredProductData1
-                        .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
-                }
-
-                //Retailer based filtering
-                let filteredProductData2 = [...productData2];
-                if (props.selectedRetailers && props.selectedRetailers.length !== 0) {
-                    filteredProductData2 = filteredProductData2
-                        .filter(item => props.selectedRetailers.some(retailer => retailer.value === parseInt(item.market)));
-                }
-
-
-                const reducedProduct1 = groupByMonth(reduceAndGetAverage(filteredProductData1));
-                const reducedProduct2 = groupByMonth(reduceAndGetAverage(filteredProductData2));
-
-                const months = reducedProduct1.map(item => moment(item.created_at).format('MMMM'));
                 const product1 = {
                     name: props.selectedProduct1.product_info.name,
-                    data: reducedProduct1.map(item => item.pricen)
+                    data: data.firstProductData.data
                 }
 
                 const product2 = {
                     name: props.selectedProduct2.product_info.name,
-                    data: reducedProduct2.map(item => item.pricen)
+                    data: data.secondProductData.data
                 }
                 setState({
                     ...state,
@@ -97,7 +77,7 @@ export default function YTDPricingComparisonChart(props) {
                         ...state.options,
                         xaxis: {
                             ...state.options.xaxis,
-                            categories: months
+                            categories: data.months
                         }
                     },
                     series: [product1, product2]

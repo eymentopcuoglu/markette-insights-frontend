@@ -53,15 +53,7 @@ export default function Dashboard(props) {
 
             <Row className='mb-5'>
                 <Col xs={ 12 } md={ 6 } xl={ 4 } className='mb-5'>
-                    <Row>
-                        <Col>
-                            <MarketAvailability />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col className='d-flex justify-content-center'>
-                            {/*<InsertTracking />*/ }
-                        </Col></Row>
+                    <MarketAvailability />
                 </Col>
                 <Col xs={ 12 } md={ 6 } xl={ 4 } className='mb-5'>
                     <SavedFilters />
