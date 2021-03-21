@@ -2,6 +2,7 @@ import React from 'react';
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { FormGroup, InputGroup, InputGroupAddon, Label } from "reactstrap";
+import moment from "moment";
 
 export default function DateWrapper(props) {
     return (
@@ -10,14 +11,15 @@ export default function DateWrapper(props) {
             <InputGroup className='flex-nowrap'>
                 { props.isDataRange ?
                     <DatePicker
-                        selected={ props.startDate }
                         onChange={ date => props.onDateChange(date) }
                         startDate={ props.startDate }
                         endDate={ props.endDate }
                         selectsRange
+                        shouldCloseOnSelect={ !props.endDate }
                         className='form-control mb-0 w-100'
                         minDate={ new Date('2020-10-22') }
                         maxDate={ new Date() }
+                        placeholderText={ moment(props.startDate).format('DD.MM.YYYY') + ' - ' + moment(props.endDate).format('DD.MM.YYYY') }
                     /> :
                     <DatePicker
                         selected={ props.startDate }
