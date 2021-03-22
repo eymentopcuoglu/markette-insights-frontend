@@ -19,6 +19,16 @@ async function insertTrackingFetch(startDate, endDate, channels, retailers, supp
     return await response.json();
 }
 
+async function insertTrackingInitialFetch() {
+    let url = API_URL + '/application/insert-tracking/initial';
+    const response = await fetch(url, {
+        method: 'GET',
+        credentials: 'include',
+    });
+    return await response.json();
+}
+
 export default {
-    insertTrackingFetch
+    insertTrackingFetch,
+    insertTrackingInitialFetch
 }

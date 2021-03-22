@@ -72,7 +72,14 @@ export default function InsertTracking(props) {
     }
 
     useEffect(() => {
+        console.log('aAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
         dispatch(actions.breadcrumb.setBreadcrumbItems("Insert Tracking", state.breadcrumbItems));
+        api.insertTracking.insertTrackingInitialFetch()
+            .then(data => {
+                setInserts(data);
+            })
+            .catch(error => {
+            })
     }, []);
 
     useEffect(() => {
@@ -111,15 +118,19 @@ export default function InsertTracking(props) {
                 <MiniCard icon='mdi-briefcase-check' title='Availability'
                           value={ ((numberOfRetailers / markets.length) * 100).toFixed(2) + '%' } />
             </Row>
+
             <Row className='mt-3 mb-1 d-flex align-items-center justify-content-end'>
+
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <DateWrapper isDataRange={ true } startDate={ startDate } endDate={ endDate }
                                  onDateChange={ onDateChange } />
                 </Col>
+
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Channel' data={ channels } selectedOptions={ selectedChannels }
                                    setSelectedOptions={ setSelectedChannels } />
                 </Col>
+
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Retailer'
                                    data={ (selectedChannels && selectedChannels.length !== 0) ? markets.filter(market => {
@@ -153,12 +164,14 @@ export default function InsertTracking(props) {
                                    }) : brands } selectedOptions={ selectedBrands }
                                    setSelectedOptions={ setSelectedBrands } />
                 </Col>
+
                 <Col xs={ 12 } md={ 6 } className='w-100 d-flex justify-content-center align-bottom col-xl'>
                     <Button className="btn btn-secondary mb-0 w-75"
                             onClick={ onButtonClick }>
                         <p className='font-size-14 text-center m-auto overflow-wrap-normal'>Search</p>
                     </Button>
                 </Col>
+
             </Row>
 
             <Row className='mt-5 mb-1 table-column-titles'>
