@@ -131,14 +131,17 @@ export default function InsertTracking(props) {
                                    }) : markets } selectedOptions={ selectedRetailers }
                                    setSelectedOptions={ setSelectedRetailers } />
                 </Col>
-                <Col xs={ 12 } md={ 6 } className='center col-xl'>
-                    <SelectWrapper title='Supplier' data={ suppliers } selectedOptions={ selectedSuppliers }
-                                   setSelectedOptions={ setSelectedSuppliers } />
-                </Col>
+
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Category' data={ categories } selectedOptions={ selectedCategories }
                                    setSelectedOptions={ setSelectedCategories } />
                 </Col>
+
+                <Col xs={ 12 } md={ 6 } className='center col-xl'>
+                    <SelectWrapper title='Supplier' data={ suppliers } selectedOptions={ selectedSuppliers }
+                                   setSelectedOptions={ setSelectedSuppliers } />
+                </Col>
+
                 <Col xs={ 12 } md={ 6 } className='center col-xl'>
                     <SelectWrapper title='Brand'
                                    data={ (selectedSuppliers && selectedSuppliers.length !== 0) ? brands.filter(brand => {
