@@ -8,7 +8,7 @@ import MiniCard from "../components/MiniCard";
 import NewsFeed from "../components/Dashboard/NewsFeed";
 import ProductsWeekly from "../components/Dashboard/ProductsWeekly";
 import MarketteNewsFeed from "../components/Dashboard/MarketteNewsFeed";
-import MarketAvailability from "../components/Overview/MarketAvailability";
+import MarketAvailability from "../components/Dashboard/MarketAvailability";
 import SavedFilters from "../components/Overview/SavedFilters";
 import LastViewedProducts from "../components/Overview/LastViewedProducts";
 

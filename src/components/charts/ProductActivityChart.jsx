@@ -13,10 +13,33 @@ export default function ProductActivityChart(props) {
                 radialBar: {
                     hollow: {
                         size: '70%',
-                    }
+                    },
+                    dataLabels: {
+                        name: {
+                            show: false
+                        },
+                        value: {
+                            color: "#5b626b",
+                            fontSize: "22px",
+                            fontWeight: 600,
+                            fontFamily: 'Poppins'
+                        }
+                    },
+                    track: {
+                        background: '#d9d9d9',
+                        strokeWidth: '97%',
+                        opacity: 1,
+                        margin: 5,
+                        dropShadow: {
+                            enabled: false,
+                            top: 0,
+                            left: 0,
+                            blur: 3,
+                            opacity: 0.5
+                        }
+                    },
                 },
-            },
-            labels: ['Product'],
+            }
         }
     });
     return (

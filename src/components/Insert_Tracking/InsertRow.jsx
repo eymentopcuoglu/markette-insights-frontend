@@ -48,12 +48,13 @@ export default function InsertRow(props) {
                 </Card>
             </Col>
             <Col xs={ 1 } className='w-100'>
-                <a href={ props.url }>
-                    <Button className="btn btn-secondary h-75 w-100">
-                        <p className='font-size-14 text-center m-auto overflow-wrap-normal'><i
-                            className='mdi mdi-24px mdi-download' /></p>
-                    </Button>
-                </a>
+                <Button className="btn btn-secondary h-75 w-100" onClick={ () => {
+                    const newWindow = window.open(props.url, '_blank', 'noopener,noreferrer')
+                    if (newWindow) newWindow.opener = null
+                } }>
+                    <p className='font-size-14 text-center m-auto overflow-wrap-normal'><i
+                        className='mdi mdi-24px mdi-download' /></p>
+                </Button>
             </Col>
         </Row>
     );
